@@ -41,18 +41,18 @@ export const AppHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-blue-200 bg-blue-600/95 backdrop-blur supports-[backdrop-filter]:bg-blue-600/90">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
-                <span className="text-white font-bold text-lg">L</span>
+              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-lg">
+                  L
+                </span>
               </div>
-              <span className="hidden font-bold sm:inline-block text-white">
-                Logo
-              </span>
+              <span className="hidden font-bold sm:inline-block">Logo</span>
             </Link>
           </div>
 
@@ -66,10 +66,10 @@ export const AppHeader = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-white/10 hover:text-white ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
                     isActive
-                      ? "bg-white/20 text-white font-semibold shadow-sm border border-white/30"
-                      : "text-blue-100 hover:text-white"
+                      ? "bg-accent text-primary font-semibold"
+                      : "text-muted-foreground"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -82,23 +82,15 @@ export const AppHeader = () => {
           {/* Right Section - User Menu & Mobile Toggle */}
           <div className="flex items-center space-x-2">
             {/* Search Button (Desktop) */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden sm:flex text-blue-100 hover:text-white hover:bg-white/10"
-            >
+            <Button variant="ghost" size="icon" className="hidden sm:flex">
               <Search className="h-4 w-4" />
               <span className="sr-only">Search</span>
             </Button>
 
             {/* Notifications Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative text-blue-100 hover:text-white hover:bg-white/10"
-            >
+            <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-4 w-4" />
-              <span className="absolute -top-1 -right-1 h-3 w-3 bg-orange-500 rounded-full text-xs border border-white/50"></span>
+              <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-xs"></span>
               <span className="sr-only">Notifications</span>
             </Button>
 
@@ -107,16 +99,14 @@ export const AppHeader = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="relative h-8 w-8 rounded-full hover:bg-white/10"
+                  className="relative h-8 w-8 rounded-full"
                 >
-                  <Avatar className="h-8 w-8 border-2 border-white/30">
+                  <Avatar className="h-8 w-8">
                     <AvatarImage
                       src="/placeholder.svg?height=32&width=32"
                       alt="User"
                     />
-                    <AvatarFallback className="bg-white/20 text-white font-semibold">
-                      JD
-                    </AvatarFallback>
+                    <AvatarFallback>JD</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -149,11 +139,7 @@ export const AppHeader = () => {
             {/* Mobile Menu Toggle */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="md:hidden text-blue-100 hover:text-white hover:bg-white/10"
-                  size="icon"
-                >
+                <Button variant="ghost" className="md:hidden" size="icon">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
@@ -168,10 +154,10 @@ export const AppHeader = () => {
                       <Link
                         key={item.name}
                         href={item.href}
-                        className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-blue-50 hover:text-blue-700 ${
+                        className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
                           isActive
-                            ? "bg-blue-100 text-blue-700 font-semibold border border-blue-200"
-                            : "text-slate-600 hover:text-blue-700"
+                            ? "bg-accent text-primary font-semibold"
+                            : "text-muted-foreground"
                         }`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
@@ -182,11 +168,8 @@ export const AppHeader = () => {
                   })}
 
                   {/* Mobile Search */}
-                  <div className="pt-4 border-t border-slate-200">
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start text-slate-600 hover:text-blue-700 hover:bg-blue-50"
-                    >
+                  <div className="pt-4 border-t">
+                    <Button variant="ghost" className="w-full justify-start">
                       <Search className="mr-3 h-5 w-5" />
                       Search
                     </Button>
