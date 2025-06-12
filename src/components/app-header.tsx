@@ -29,9 +29,9 @@ import { useState } from "react";
 // Simulated navigation items
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
-  { name: "About", href: "/about", icon: Info },
-  { name: "Services", href: "/services", icon: Briefcase },
-  { name: "Contact", href: "/contact", icon: Mail },
+  { name: "Sobre", href: "/about", icon: Info },
+  { name: "Serviços", href: "/services", icon: Briefcase },
+  { name: "Contatos", href: "/contact", icon: Mail },
 ];
 
 // Simulated current route for demonstration
