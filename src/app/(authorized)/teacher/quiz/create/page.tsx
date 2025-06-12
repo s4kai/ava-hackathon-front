@@ -135,23 +135,23 @@ export default function CreateQuizPage() {
           <Link href="/teacher/dashboard">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
+              Voltar ao Painel
             </Button>
           </Link>
 
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Create New Quiz
+                Criar Novo Quiz
               </h1>
               <p className="text-gray-600">
-                Design assessments for your students
+                Crie avaliações para seus alunos
               </p>
             </div>
             <div className="flex space-x-3">
               <Button onClick={saveQuiz}>
                 <Save className="h-4 w-4 mr-2" />
-                Save Quiz
+                Salvar Quiz
               </Button>
             </div>
           </div>
@@ -160,15 +160,15 @@ export default function CreateQuizPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Quiz Settings</CardTitle>
+              <CardTitle>Configurações do Quiz</CardTitle>
               <CardDescription>
-                Configure basic quiz information
+                Configure as informações básicas do quiz
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="quiz-title">Quiz Title</Label>
+                  <Label htmlFor="quiz-title">Título do Quiz</Label>
                   <Input
                     id="quiz-title"
                     placeholder="Enter quiz title"
@@ -178,7 +178,7 @@ export default function CreateQuizPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="course-select">Course</Label>
+                  <Label htmlFor="course-select">Curso</Label>
                   <Select
                     value={selectedCourse}
                     onValueChange={setSelectedCourse}
@@ -201,7 +201,7 @@ export default function CreateQuizPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="quiz-description">Description</Label>
+                <Label htmlFor="quiz-description">Descrição</Label>
                 <Textarea
                   id="quiz-description"
                   placeholder="Enter quiz description"
@@ -211,7 +211,7 @@ export default function CreateQuizPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="time-limit">Time Limit (minutes)</Label>
+                <Label htmlFor="time-limit">Tempo Limite (minutos)</Label>
                 <Input
                   id="time-limit"
                   type="number"
@@ -227,17 +227,17 @@ export default function CreateQuizPage() {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Wand2 className="h-5 w-5 mr-2" />
-                AI Quiz Generation
+                Geração de Quiz por IA
               </CardTitle>
               <CardDescription>
-                Generate quiz questions automatically using AI based on your
-                topic and requirements
+                Gere perguntas de quiz automaticamente usando IA com base no seu
+                tópico e requisitos
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="ai-topic">Topic</Label>
+                  <Label htmlFor="ai-topic">Tópico</Label>
                   <Input
                     id="ai-topic"
                     placeholder="e.g., JavaScript fundamentals"
@@ -247,21 +247,21 @@ export default function CreateQuizPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="ai-difficulty">Difficulty Level</Label>
+                  <Label htmlFor="ai-difficulty">Nível de Dificuldade</Label>
                   <Select value={aiDifficulty} onValueChange={setAiDifficulty}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select difficulty" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="beginner">Beginner</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
+                      <SelectItem value="beginner">Iniciante</SelectItem>
+                      <SelectItem value="intermediate">Intermediário</SelectItem>
+                      <SelectItem value="advanced">Avançado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="ai-count">Number of Questions</Label>
+                  <Label htmlFor="ai-count">Número de Perguntas</Label>
                   <Select
                     value={aiQuestionCount}
                     onValueChange={setAiQuestionCount}
@@ -270,10 +270,10 @@ export default function CreateQuizPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="5">5 Questions</SelectItem>
-                      <SelectItem value="10">10 Questions</SelectItem>
-                      <SelectItem value="15">15 Questions</SelectItem>
-                      <SelectItem value="20">20 Questions</SelectItem>
+                      <SelectItem value="5">5 Perguntas</SelectItem>
+                      <SelectItem value="10">10 Perguntas</SelectItem>
+                      <SelectItem value="15">15 Perguntas</SelectItem>
+                      <SelectItem value="20">20 Perguntas</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -287,12 +287,12 @@ export default function CreateQuizPage() {
                 {isGenerating ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Generating Quiz...
+                    Gerando Quiz...
                   </>
                 ) : (
                   <>
                     <Wand2 className="h-4 w-4 mr-2" />
-                    Generate Quiz with AI
+                    Gerar Quiz com IA
                   </>
                 )}
               </Button>
@@ -302,9 +302,9 @@ export default function CreateQuizPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Questions</CardTitle>
+                <CardTitle>Perguntas</CardTitle>
                 <CardDescription>
-                  Add and configure quiz questions
+                  Adicione e configure as perguntas do quiz
                 </CardDescription>
               </div>
               <div className="flex items-center space-x-2">
@@ -317,12 +317,12 @@ export default function CreateQuizPage() {
                   ) : (
                     <EyeClosed className="h-4 w-4 mr-2" />
                   )}
-                  Preview
+                  Pré-visualizar
                 </Button>
 
                 <Button onClick={addQuestion}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Question
+                  Adicionar Pergunta
                 </Button>
               </div>
             </CardHeader>
@@ -333,10 +333,10 @@ export default function CreateQuizPage() {
                     <div className="mt-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold">
-                          Generated Questions
+                          Perguntas Geradas
                         </h3>
                         <Badge variant="secondary">
-                          {questions.length} questions
+                          {questions.length} perguntas
                         </Badge>
                       </div>
 
@@ -350,7 +350,7 @@ export default function CreateQuizPage() {
                               <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                   <h4 className="font-medium mb-2">
-                                    Question {index + 1}: {question.question}
+                                    Pergunta {index + 1}: {question.question}
                                   </h4>
                                   {question.options && (
                                     <div className="space-y-1 text-sm">
@@ -382,7 +382,7 @@ export default function CreateQuizPage() {
                                   )}
                                   {question.explanation && (
                                     <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
-                                      <strong>Explanation:</strong>{" "}
+                                      <strong>Explicação:</strong>{" "}
                                       {question.explanation}
                                     </div>
                                   )}
@@ -407,8 +407,7 @@ export default function CreateQuizPage() {
                 <>
                   {questions.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
-                      No questions added yet. Click "Add Question" to get
-                      started.
+                    Nenhuma pergunta adicionada ainda. Clique em "Adicionar Pergunta" para começar.
                     </div>
                   ) : (
                     questions.map((question, index) => (
@@ -418,7 +417,7 @@ export default function CreateQuizPage() {
                       >
                         <CardHeader className="flex flex-row items-center justify-between">
                           <CardTitle className="text-lg">
-                            Question {index + 1}
+                            Pergunta {index + 1}
                           </CardTitle>
                           <Button
                             variant="outline"
@@ -430,7 +429,7 @@ export default function CreateQuizPage() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <div className="space-y-2">
-                            <Label>Question Type</Label>
+                            <Label>Tipo de Pergunta</Label>
                             <Select
                               value={question.type}
                               onValueChange={(value) =>
@@ -442,20 +441,20 @@ export default function CreateQuizPage() {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="multiple-choice">
-                                  Multiple Choice
+                                  Múltipla Escolha
                                 </SelectItem>
                                 <SelectItem value="true-false">
-                                  True/False
+                                  Verdadeiro/Falso
                                 </SelectItem>
                                 <SelectItem value="short-answer">
-                                  Short Answer
+                                  Resposta Curta
                                 </SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
 
                           <div className="space-y-2">
-                            <Label>Question</Label>
+                            <Label>Pergunta</Label>
                             <Textarea
                               placeholder="Enter your question"
                               value={question.question}
@@ -471,7 +470,7 @@ export default function CreateQuizPage() {
 
                           {question.type === "multiple-choice" && (
                             <div className="space-y-2">
-                              <Label>Answer Options</Label>
+                              <Label>Opções de Resposta</Label>
                               <RadioGroup
                                 value={question.correct?.toString()}
                                 onValueChange={(value) =>
@@ -528,7 +527,7 @@ export default function CreateQuizPage() {
 
                           {question.type === "true-false" && (
                             <div className="space-y-2">
-                              <Label>Correct Answer</Label>
+                              <Label>Resposta Correta</Label>
                               <RadioGroup
                                 value={question.correct?.toString()}
                                 onValueChange={(value) =>
@@ -541,7 +540,7 @@ export default function CreateQuizPage() {
                                     id={`q${question.id}-true`}
                                   />
                                   <Label htmlFor={`q${question.id}-true`}>
-                                    True
+                                    Verdadeiro
                                   </Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
@@ -550,7 +549,7 @@ export default function CreateQuizPage() {
                                     id={`q${question.id}-false`}
                                   />
                                   <Label htmlFor={`q${question.id}-false`}>
-                                    False
+                                    Falso
                                   </Label>
                                 </div>
                               </RadioGroup>
@@ -558,7 +557,7 @@ export default function CreateQuizPage() {
                           )}
 
                           <div className="space-y-2">
-                            <Label>Explanation (Optional)</Label>
+                            <Label>Explicação (Opcional)</Label>
                             <Textarea
                               placeholder="Explain the correct answer"
                               value={question.explanation}

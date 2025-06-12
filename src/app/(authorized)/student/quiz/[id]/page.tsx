@@ -101,7 +101,7 @@ export default function QuizPage() {
   }, [timeLeft, quizCompleted])
 
   if (!quiz) {
-    return <div>Quiz not found</div>
+    return <div>Quiz não encontrado</div>
   }
 
   const handleAnswerSelect = (questionId: number, answerIndex: number) => {
@@ -139,15 +139,15 @@ export default function QuizPage() {
         <div className="max-w-4xl mx-auto">
           <Card>
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Quiz Results</CardTitle>
+              <CardTitle className="text-2xl">Resultado do Quiz</CardTitle>
               <CardDescription>{quiz.title}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="text-center">
                 <div className="text-6xl font-bold text-green-600 mb-2">{score}%</div>
                 <div className="text-lg text-gray-600">
-                  You got {quiz.questions.filter((q) => answers[q.id] === q.correct).length} out of{" "}
-                  {quiz.questions.length} questions correct
+                  Você acertou {quiz.questions.filter((q) => answers[q.id] === q.correct).length} de{" "}
+                  {quiz.questions.length} questões corretas
                 </div>
                 <Badge variant={score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive"} className="mt-2">
                   {score >= 80 ? "Excellent!" : score >= 60 ? "Good Job!" : "Needs Improvement"}
@@ -155,7 +155,7 @@ export default function QuizPage() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Question Review</h3>
+                <h3 className="text-lg font-semibold">Revisão das Questões</h3>
                 {quiz.questions.map((question, index) => {
                   const userAnswer = answers[question.id]
                   const isCorrect = userAnswer === question.correct
@@ -174,23 +174,23 @@ export default function QuizPage() {
                           )}
                           <div className="flex-1">
                             <h4 className="font-medium mb-2">
-                              Question {index + 1}: {question.question}
+                              Questão {index + 1}: {question.question}
                             </h4>
                             <div className="space-y-1 text-sm">
                               <div className="text-gray-600">
-                                Your answer:{" "}
+                                Sua resposta:{" "}
                                 <span className={isCorrect ? "text-green-600" : "text-red-600"}>
                                   {question.options[userAnswer] || "Not answered"}
                                 </span>
                               </div>
                               {!isCorrect && (
                                 <div className="text-gray-600">
-                                  Correct answer:{" "}
+                                  Resposta Correta:{" "}
                                   <span className="text-green-600">{question.options[question.correct]}</span>
                                 </div>
                               )}
                               <div className="text-gray-700 mt-2 p-2 bg-blue-50 rounded">
-                                <strong>Explanation:</strong> {question.explanation}
+                                <strong>Explicação:</strong> {question.explanation}
                               </div>
                             </div>
                           </div>
@@ -203,10 +203,10 @@ export default function QuizPage() {
 
               <div className="flex justify-center space-x-4">
                 <Link href="/student/dashboard">
-                  <Button>Return to Dashboard</Button>
+                  <Button>Voltar ao Painel</Button>
                 </Link>
                 <Button variant="outline" onClick={() => window.location.reload()}>
-                  Retake Quiz
+                  Refazer Quiz
                 </Button>
               </div>
             </CardContent>
@@ -226,7 +226,7 @@ export default function QuizPage() {
           <Link href="/student/dashboard">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
+              Voltar ao Painel
             </Button>
           </Link>
 
@@ -248,9 +248,9 @@ export default function QuizPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>
-                Question {currentQuestion + 1} of {quiz.questions.length}
+                Questão {currentQuestion + 1} of {quiz.questions.length}
               </CardTitle>
-              <Badge variant="outline">{Math.round(progress)}% Complete</Badge>
+              <Badge variant="outline">{Math.round(progress)}% Completo</Badge>
             </div>
             <Progress value={progress} className="h-2" />
           </CardHeader>
@@ -280,19 +280,19 @@ export default function QuizPage() {
                 disabled={currentQuestion === 0}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Previous
+                Anterior
               </Button>
 
               {currentQuestion === quiz.questions.length - 1 ? (
                 <Button onClick={handleSubmitQuiz} className="bg-green-600 hover:bg-green-700">
-                  Submit Quiz
+                  Enviar Quiz
                 </Button>
               ) : (
                 <Button
                   onClick={() => setCurrentQuestion(Math.min(quiz.questions.length - 1, currentQuestion + 1))}
                   disabled={answers[currentQ.id] === undefined}
                 >
-                  Next
+                  Próximo
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               )}
@@ -303,7 +303,7 @@ export default function QuizPage() {
         {/* Question Navigation */}
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle>Question Navigation</CardTitle>
+            <CardTitle>Navegação entre Questões</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-5 gap-2">

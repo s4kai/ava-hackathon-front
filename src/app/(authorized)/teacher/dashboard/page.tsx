@@ -63,7 +63,7 @@ export default function TeacherDashboard() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, Professor!</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Bem-vindo de volta, Professor!</h1>
           <p className="text-gray-600">{userEmail}</p>
         </div>
 
@@ -74,7 +74,7 @@ export default function TeacherDashboard() {
               <div className="flex items-center">
                 <Users className="h-8 w-8 text-blue-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Students</p>
+                  <p className="text-sm font-medium text-gray-600">Total de Alunos</p>
                   <p className="text-2xl font-bold text-gray-900">69</p>
                 </div>
               </div>
@@ -86,7 +86,7 @@ export default function TeacherDashboard() {
               <div className="flex items-center">
                 <BookOpen className="h-8 w-8 text-green-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Active Courses</p>
+                  <p className="text-sm font-medium text-gray-600">Cursos Ativos</p>
                   <p className="text-2xl font-bold text-gray-900">3</p>
                 </div>
               </div>
@@ -98,7 +98,7 @@ export default function TeacherDashboard() {
               <div className="flex items-center">
                 <TrendingUp className="h-8 w-8 text-purple-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Avg. Class Progress</p>
+                  <p className="text-sm font-medium text-gray-600">Progresso Médio</p>
                   <p className="text-2xl font-bold text-gray-900">70%</p>
                 </div>
               </div>
@@ -110,7 +110,7 @@ export default function TeacherDashboard() {
               <div className="flex items-center">
                 <Award className="h-8 w-8 text-yellow-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Avg. Quiz Score</p>
+                  <p className="text-sm font-medium text-gray-600">Nota Média em Quizzes</p>
                   <p className="text-2xl font-bold text-gray-900">84%</p>
                 </div>
               </div>
@@ -124,12 +124,12 @@ export default function TeacherDashboard() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle>My Classes</CardTitle>
-                  <CardDescription>Manage your courses and track student progress</CardDescription>
+                  <CardTitle>Minhas Turmas</CardTitle>
+                  <CardDescription>Gerencie seus cursos e acompanhe o progresso dos alunos</CardDescription>
                 </div>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  New Course
+                  Novo Curso
                 </Button>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -141,11 +141,11 @@ export default function TeacherDashboard() {
                         <div className="flex items-center gap-6 text-sm text-gray-600 mb-3">
                           <span className="flex items-center">
                             <Users className="h-4 w-4 mr-1" />
-                            {course.students} students
+                            {course.students} alunos
                           </span>
                           <span className="flex items-center">
                             <BookOpen className="h-4 w-4 mr-1" />
-                            {course.lessons} lessons
+                            {course.lessons} lições
                           </span>
                           <span className="flex items-center">
                             <Clock className="h-4 w-4 mr-1" />
@@ -158,24 +158,24 @@ export default function TeacherDashboard() {
 
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-2">
-                        <span>Average Progress</span>
+                        <span>Progresso Médio</span>
                         <span>{course.avgProgress}%</span>
                       </div>
                       <Progress value={course.avgProgress} className="h-2" />
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <Badge variant="secondary">{course.students} enrolled</Badge>
+                      <Badge variant="secondary">{course.students} matriculados</Badge>
                       <div className="flex space-x-2">
                         <Link href={`/teacher/course/${course.id}`}>
                           <Button size="sm" variant="outline">
                             <Eye className="h-4 w-4 mr-1" />
-                            View
+                            Visualizar
                           </Button>
                         </Link>
                         <Button size="sm">
                           <Edit className="h-4 w-4 mr-1" />
-                          Manage
+                          Gerenciar
                         </Button>
                       </div>
                     </div>
@@ -189,8 +189,8 @@ export default function TeacherDashboard() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Latest student interactions</CardDescription>
+                <CardTitle>Atividade Recente</CardTitle>
+                <CardDescription>Últimas interações dos alunos</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {recentActivity.map((activity, index) => (
@@ -226,26 +226,26 @@ export default function TeacherDashboard() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+                <CardTitle>Ações Rápidas</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Link href="/teacher/quiz/create">
                   <Button variant="outline" className="w-full justify-start">
                     <Plus className="h-4 w-4 mr-2" />
-                    Create AI Quiz
+                    Criar Quiz com IA
                   </Button>
                 </Link>
                 <Button variant="outline" className="w-full justify-start">
                   <BarChart3 className="h-4 w-4 mr-2" />
-                  View Analytics
+                  Ver Análises
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
                   <GraduationCap className="h-4 w-4 mr-2" />
-                  Grade Assignments
+                  Avaliar Tarefas
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
                   <Users className="h-4 w-4 mr-2" />
-                  Student Performance
+                  Desempenho dos Alunos
                 </Button>
               </CardContent>
             </Card>

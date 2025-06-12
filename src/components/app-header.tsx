@@ -84,14 +84,14 @@ export const AppHeader = () => {
             {/* Search Button (Desktop) */}
             <Button variant="ghost" size="icon" className="hidden sm:flex">
               <Search className="h-4 w-4" />
-              <span className="sr-only">Search</span>
+              <span className="sr-only">Pesquisar</span>
             </Button>
 
             {/* Notifications Button */}
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-4 w-4" />
               <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-xs"></span>
-              <span className="sr-only">Notifications</span>
+              <span className="sr-only">Notificações</span>
             </Button>
 
             {/* User Dropdown Menu */}
@@ -122,16 +122,16 @@ export const AppHeader = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+                  <span>Perfil</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
+                  <span>Configurações</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
+                  <span>Sair</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -141,7 +141,7 @@ export const AppHeader = () => {
               <SheetTrigger asChild>
                 <Button variant="ghost" className="md:hidden" size="icon">
                   <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
+                  <span className="sr-only">Alternar menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
@@ -171,7 +171,7 @@ export const AppHeader = () => {
                   <div className="pt-4 border-t">
                     <Button variant="ghost" className="w-full justify-start">
                       <Search className="mr-3 h-5 w-5" />
-                      Search
+                      Pesquisar
                     </Button>
                   </div>
                 </nav>

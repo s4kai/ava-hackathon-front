@@ -60,7 +60,7 @@ export default function StudentDashboard() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, Student!</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Bem-vindo de volta, Aluno!</h1>
           <p className="text-gray-600">{userEmail}</p>
         </div>
 
@@ -71,7 +71,7 @@ export default function StudentDashboard() {
               <div className="flex items-center">
                 <BookOpen className="h-8 w-8 text-blue-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Enrolled Courses</p>
+                  <p className="text-sm font-medium text-gray-600">Cursos Inscritos</p>
                   <p className="text-2xl font-bold text-gray-900">3</p>
                 </div>
               </div>
@@ -83,7 +83,7 @@ export default function StudentDashboard() {
               <div className="flex items-center">
                 <Clock className="h-8 w-8 text-green-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Hours Studied</p>
+                  <p className="text-sm font-medium text-gray-600">Horas Estudados</p>
                   <p className="text-2xl font-bold text-gray-900">47</p>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export default function StudentDashboard() {
               <div className="flex items-center">
                 <Trophy className="h-8 w-8 text-yellow-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Avg. Quiz Score</p>
+                  <p className="text-sm font-medium text-gray-600">Média em Questionários</p>
                   <p className="text-2xl font-bold text-gray-900">87%</p>
                 </div>
               </div>
@@ -107,7 +107,7 @@ export default function StudentDashboard() {
               <div className="flex items-center">
                 <TrendingUp className="h-8 w-8 text-purple-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Overall Progress</p>
+                  <p className="text-sm font-medium text-gray-600">Progresso Geral</p>
                   <p className="text-2xl font-bold text-gray-900">70%</p>
                 </div>
               </div>
@@ -120,8 +120,8 @@ export default function StudentDashboard() {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle>My Courses</CardTitle>
-                <CardDescription>Continue your learning journey</CardDescription>
+                <CardTitle>Meus Cursos</CardTitle>
+                <CardDescription>Continue sua jornada de aprendizado</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {mockCourses.map((course) => (
@@ -132,9 +132,9 @@ export default function StudentDashboard() {
                         <p className="text-sm text-gray-600 mb-2">Instructor: {course.instructor}</p>
                         <div className="flex items-center gap-4 text-sm text-gray-500">
                           <span>
-                            {course.completedLessons}/{course.totalLessons} lessons
+                            {course.completedLessons}/{course.totalLessons} aulas
                           </span>
-                          <span>Due: {course.dueDate}</span>
+                          <span>Prazo: {course.dueDate}</span>
                         </div>
                       </div>
                       <div className={`w-3 h-3 rounded-full ${course.color}`}></div>
@@ -142,7 +142,7 @@ export default function StudentDashboard() {
 
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Progress</span>
+                        <span>Progresso</span>
                         <span>{course.progress}%</span>
                       </div>
                       <Progress value={course.progress} className="h-2" />
@@ -150,12 +150,12 @@ export default function StudentDashboard() {
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium">Next: {course.nextLesson}</p>
+                        <p className="text-sm font-medium">Próximo: {course.nextLesson}</p>
                       </div>
                       <Link href={`/student/course/${course.id}`}>
                         <Button size="sm">
                           <Play className="h-4 w-4 mr-1" />
-                          Continue
+                          Continuar
                         </Button>
                       </Link>
                     </div>
@@ -169,8 +169,8 @@ export default function StudentDashboard() {
           <div>
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Your latest learning activities</CardDescription>
+                <CardTitle>Atividade Recentes</CardTitle>
+                <CardDescription>Suas últimas atividades de aprendizado</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {recentActivity.map((activity, index) => (
@@ -199,20 +199,20 @@ export default function StudentDashboard() {
             {/* Quick Actions */}
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+                <CardTitle>Ações Rápidas</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button variant="outline" className="w-full justify-start">
                   <BookOpen className="h-4 w-4 mr-2" />
-                  Browse All Courses
+                  Navegar por Todos os Cursos
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
                   <Trophy className="h-4 w-4 mr-2" />
-                  View Achievements
+                   Ver Conquistas
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
                   <TrendingUp className="h-4 w-4 mr-2" />
-                  Performance Analytics
+                  Análise de Desempenho
                 </Button>
               </CardContent>
             </Card>

@@ -40,14 +40,14 @@ export default function LoginPage() {
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
             <CardDescription>
-              Choose your role and sign in to continue
+              Escolha seu perfil e faça login para continuar
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="student" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="student">Student</TabsTrigger>
-                <TabsTrigger value="teacher">Teacher</TabsTrigger>
+                <TabsTrigger value="student">Aluno</TabsTrigger>
+                <TabsTrigger value="teacher">Professor</TabsTrigger>
               </TabsList>
 
               <TabsContent value="student" className="space-y-4">
@@ -62,7 +62,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="student-password">Password</Label>
+                  <Label htmlFor="student-password">Senha</Label>
                   <Input
                     id="student-password"
                     type="password"
@@ -75,7 +75,7 @@ export default function LoginPage() {
                   className="w-full"
                   onClick={() => handleLogin("student")}
                 >
-                  Sign In as Student
+                  Entrar como Aluno
                 </Button>
               </TabsContent>
 
@@ -91,7 +91,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="teacher-password">Password</Label>
+                  <Label htmlFor="teacher-password">Senha</Label>
                   <Input
                     id="teacher-password"
                     type="password"
@@ -104,7 +104,7 @@ export default function LoginPage() {
                   className="w-full"
                   onClick={() => handleLogin("teacher")}
                 >
-                  Sign In as Teacher
+                  Entrar como Professor
                 </Button>
               </TabsContent>
             </Tabs>

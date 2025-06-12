@@ -54,7 +54,7 @@ export default function CoursePage() {
   const [selectedLesson, setSelectedLesson] = useState(course?.lessons.find((l) => l.current) || course?.lessons[0])
 
   if (!course) {
-    return <div>Course not found</div>
+    return <div>Curso não encontrado</div>
   }
 
   return (
@@ -65,19 +65,19 @@ export default function CoursePage() {
           <Link href="/student/dashboard">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
+              Voltar ao Painel
             </Button>
           </Link>
 
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{course.title}</h1>
-              <p className="text-gray-600 mb-4">Instructor: {course.instructor}</p>
+              <p className="text-gray-600 mb-4">Instrutor: {course.instructor}</p>
               <p className="text-gray-700 max-w-3xl">{course.description}</p>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-green-600">{course.progress}%</div>
-              <div className="text-sm text-gray-600">Complete</div>
+              <div className="text-sm text-gray-600">Completo</div>
             </div>
           </div>
 
@@ -85,9 +85,9 @@ export default function CoursePage() {
             <Progress value={course.progress} className="h-3" />
             <div className="flex justify-between text-sm text-gray-600 mt-1">
               <span>
-                {course.completedLessons} of {course.totalLessons} lessons completed
+                {course.completedLessons} de {course.totalLessons} aulas completas
               </span>
-              <span>{course.totalLessons - course.completedLessons} lessons remaining</span>
+              <span>{course.totalLessons - course.completedLessons} aulas restantes</span>
             </div>
           </div>
         </div>
@@ -97,16 +97,16 @@ export default function CoursePage() {
           <div className="lg:col-span-3">
             <Tabs defaultValue="lessons" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="lessons">Lessons</TabsTrigger>
-                <TabsTrigger value="quizzes">Quizzes</TabsTrigger>
-                <TabsTrigger value="materials">Materials</TabsTrigger>
+                <TabsTrigger value="lessons">Aulas</TabsTrigger>
+                <TabsTrigger value="quizzes">Questiónarios</TabsTrigger>
+                <TabsTrigger value="materials">Materiais</TabsTrigger>
               </TabsList>
 
               <TabsContent value="lessons" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Course Lessons</CardTitle>
-                    <CardDescription>Complete lessons in order to progress through the course</CardDescription>
+                    <CardTitle>Aulas do Curso</CardTitle>
+                    <CardDescription>Complete as aulas em ordem para progredir no curso</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
@@ -147,8 +147,8 @@ export default function CoursePage() {
                           </div>
 
                           <div className="flex items-center space-x-2">
-                            {lesson.current && <Badge variant="secondary">Current</Badge>}
-                            {lesson.completed && <Badge variant="default">Completed</Badge>}
+                            {lesson.current && <Badge variant="secondary">Atual</Badge>}
+                            {lesson.completed && <Badge variant="default">Completo</Badge>}
                           </div>
                         </div>
                       ))}
@@ -160,8 +160,8 @@ export default function CoursePage() {
               <TabsContent value="quizzes" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Course Quizzes</CardTitle>
-                    <CardDescription>Test your knowledge with these assessments</CardDescription>
+                    <CardTitle>Questionários do Curso</CardTitle>
+                    <CardDescription>Teste seus conhecimentos com estas avaliações</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
@@ -171,13 +171,13 @@ export default function CoursePage() {
                             <HelpCircle className="h-5 w-5 text-blue-600" />
                             <div>
                               <h3 className="font-medium">{quiz.title}</h3>
-                              <p className="text-sm text-gray-600">Covers lessons {quiz.lessons}</p>
+                              <p className="text-sm text-gray-600">Cobre as aulas {quiz.lessons}</p>
                             </div>
                           </div>
 
                           <div className="flex items-center space-x-3">
                             {quiz.completed && quiz.score && (
-                              <Badge variant={quiz.score >= 80 ? "default" : "secondary"}>Score: {quiz.score}%</Badge>
+                              <Badge variant={quiz.score >= 80 ? "default" : "secondary"}>Pontuação: {quiz.score}%</Badge>
                             )}
                             <Link href={`/student/quiz/${quiz.id}`}>
                               <Button size="sm" variant={quiz.completed ? "outline" : "default"}>
@@ -195,8 +195,8 @@ export default function CoursePage() {
               <TabsContent value="materials" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Course Materials</CardTitle>
-                    <CardDescription>Download additional resources and references</CardDescription>
+                    <CardTitle>Materiais do Curso</CardTitle>
+                    <CardDescription>Baixe recursos e refências adicionais</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
@@ -230,7 +230,7 @@ export default function CoursePage() {
             {selectedLesson && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Current Lesson</CardTitle>
+                  <CardTitle>Aula Atual</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -255,12 +255,12 @@ export default function CoursePage() {
                     {selectedLesson.completed ? (
                       <Button className="w-full" variant="outline">
                         <CheckCircle className="h-4 w-4 mr-2" />
-                        Review Lesson
+                        Revisar Aula
                       </Button>
                     ) : (
                       <Button className="w-full">
                         <Play className="h-4 w-4 mr-2" />
-                        Start Lesson
+                        Iniciar Aula
                       </Button>
                     )}
                   </div>
@@ -270,26 +270,26 @@ export default function CoursePage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Course Progress</CardTitle>
+                <CardTitle>Progresso do Curso</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-green-600 mb-1">{course.progress}%</div>
-                    <div className="text-sm text-gray-600">Complete</div>
+                    <div className="text-sm text-gray-600">Completo</div>
                   </div>
 
                   <Progress value={course.progress} className="h-2" />
 
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span>Completed Lessons:</span>
+                      <span>Aulas Completas:</span>
                       <span className="font-medium">
                         {course.completedLessons}/{course.totalLessons}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Quiz Average:</span>
+                      <span>Média dos Questionários:</span>
                       <span className="font-medium">88%</span>
                     </div>
                   </div>

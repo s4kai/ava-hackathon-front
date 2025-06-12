@@ -72,7 +72,7 @@ export default function TeacherCoursePage() {
   const course = mockCourseData[courseId as keyof typeof mockCourseData]
 
   if (!course) {
-    return <div>Course not found</div>
+    return <div>Curso não encontrado</div>
   }
 
   return (
@@ -83,7 +83,7 @@ export default function TeacherCoursePage() {
           <Link href="/teacher/dashboard">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
+              Voltar ao Painel
             </Button>
           </Link>
 
@@ -94,27 +94,27 @@ export default function TeacherCoursePage() {
               <div className="flex items-center gap-6 text-sm text-gray-600">
                 <span className="flex items-center">
                   <Users className="h-4 w-4 mr-1" />
-                  {course.students} students
+                  {course.students} Alunos
                 </span>
                 <span className="flex items-center">
                   <BookOpen className="h-4 w-4 mr-1" />
-                  {course.lessons} lessons
+                  {course.lessons} Aulas
                 </span>
                 <span className="flex items-center">
                   <BarChart3 className="h-4 w-4 mr-1" />
-                  {course.avgProgress}% avg progress
+                  {course.avgProgress}% Progresso Médio
                 </span>
               </div>
             </div>
             <div className="flex space-x-3">
               <Button variant="outline">
                 <Edit className="h-4 w-4 mr-2" />
-                Edit Course
+                Editar Curso
               </Button>
               <Link href="/teacher/quiz/create">
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  Create Quiz
+                  Criar Quiz
                 </Button>
               </Link>
             </div>
@@ -123,10 +123,10 @@ export default function TeacherCoursePage() {
 
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="students">Students</TabsTrigger>
-            <TabsTrigger value="lessons">Lessons</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+            <TabsTrigger value="students">Alunos</TabsTrigger>
+            <TabsTrigger value="lessons">Aulas</TabsTrigger>
+            <TabsTrigger value="analytics">Análises</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -136,7 +136,7 @@ export default function TeacherCoursePage() {
                   <div className="flex items-center">
                     <Users className="h-8 w-8 text-blue-600" />
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Enrolled Students</p>
+                      <p className="text-sm font-medium text-gray-600">Alunos Matriculados</p>
                       <p className="text-2xl font-bold text-gray-900">{course.students}</p>
                     </div>
                   </div>
@@ -148,7 +148,7 @@ export default function TeacherCoursePage() {
                   <div className="flex items-center">
                     <TrendingUp className="h-8 w-8 text-green-600" />
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Avg Progress</p>
+                      <p className="text-sm font-medium text-gray-600">Progresso Médio</p>
                       <p className="text-2xl font-bold text-gray-900">{course.avgProgress}%</p>
                     </div>
                   </div>
@@ -160,7 +160,7 @@ export default function TeacherCoursePage() {
                   <div className="flex items-center">
                     <BarChart3 className="h-8 w-8 text-purple-600" />
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Quiz Average</p>
+                      <p className="text-sm font-medium text-gray-600">Média de Quizzes</p>
                       <p className="text-2xl font-bold text-gray-900">82%</p>
                     </div>
                   </div>
@@ -171,8 +171,8 @@ export default function TeacherCoursePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent Student Activity</CardTitle>
-                  <CardDescription>Latest submissions and completions</CardDescription>
+                  <CardTitle>Atividade Recente dos Alunos</CardTitle>
+                  <CardDescription>Últimos envios e conclusões</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {course.students_data.slice(0, 5).map((student) => (
@@ -188,7 +188,7 @@ export default function TeacherCoursePage() {
                         </Avatar>
                         <div>
                           <p className="font-medium">{student.name}</p>
-                          <p className="text-sm text-gray-600">Progress: {student.progress}%</p>
+                          <p className="text-sm text-gray-600">Progresso: {student.progress}%</p>
                         </div>
                       </div>
                       <div className="text-right">
@@ -208,19 +208,19 @@ export default function TeacherCoursePage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Quiz Performance</CardTitle>
-                  <CardDescription>Recent quiz statistics</CardDescription>
+                  <CardTitle>Desempenho nos Quiz</CardTitle>
+                  <CardDescription>Estatísticas recentes dos quiz</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {course.quizzes.map((quiz) => (
                     <div key={quiz.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
                         <h4 className="font-medium">{quiz.title}</h4>
-                        <p className="text-sm text-gray-600">{quiz.completions} completions</p>
+                        <p className="text-sm text-gray-600">{quiz.completions} conclusões</p>
                       </div>
                       <div className="text-right">
                         <div className="text-lg font-bold text-green-600">{quiz.avgScore}%</div>
-                        <p className="text-xs text-gray-500">Average</p>
+                        <p className="text-xs text-gray-500">Média</p>
                       </div>
                     </div>
                   ))}
@@ -232,8 +232,8 @@ export default function TeacherCoursePage() {
           <TabsContent value="students" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Student Performance</CardTitle>
-                <CardDescription>Track individual student progress and performance</CardDescription>
+                <CardTitle>Desempenho dos Alunos</CardTitle>
+                <CardDescription>Acompanhe o progresso e desempenho individual dos alunos</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -254,28 +254,28 @@ export default function TeacherCoursePage() {
                         <div>
                           <h3 className="font-medium">{student.name}</h3>
                           <p className="text-sm text-gray-600">{student.email}</p>
-                          <p className="text-xs text-gray-500">Last active: {student.lastActive}</p>
+                          <p className="text-xs text-gray-500">Última atividade: {student.lastActive}</p>
                         </div>
                       </div>
 
                       <div className="flex items-center space-x-6">
                         <div className="text-center">
                           <div className="text-lg font-bold">{student.progress}%</div>
-                          <div className="text-xs text-gray-600">Progress</div>
+                          <div className="text-xs text-gray-600">Progresso</div>
                           <Progress value={student.progress} className="w-20 h-2 mt-1" />
                         </div>
 
                         <div className="text-center">
                           <div className="text-lg font-bold">{student.quizAvg}%</div>
-                          <div className="text-xs text-gray-600">Quiz Avg</div>
+                          <div className="text-xs text-gray-600">Média de Quizzes</div>
                         </div>
 
                         <div className="flex space-x-2">
                           <Button size="sm" variant="outline">
-                            View Details
+                            Ver Detalhes
                           </Button>
                           <Button size="sm" variant="outline">
-                            Message
+                            Mensagem
                           </Button>
                         </div>
                       </div>
@@ -290,12 +290,12 @@ export default function TeacherCoursePage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Course Lessons</CardTitle>
-                  <CardDescription>Manage lesson content and track completion rates</CardDescription>
+                  <CardTitle>Aulas do Curso</CardTitle>
+                  <CardDescription>Gerencie o conteúdo das aulas e acompanhe as taxas de conclusão</CardDescription>
                 </div>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Lesson
+                  Adicionar Aula
                 </Button>
               </CardHeader>
               <CardContent>
@@ -316,7 +316,7 @@ export default function TeacherCoursePage() {
                             </span>
                             <span className="flex items-center">
                               <Users className="h-4 w-4 mr-1" />
-                              {Math.round((lesson.completionRate / 100) * course.students)} completed
+                              {Math.round((lesson.completionRate / 100) * course.students)} concluíram
                             </span>
                           </div>
                         </div>
@@ -325,7 +325,7 @@ export default function TeacherCoursePage() {
                       <div className="flex items-center space-x-4">
                         <div className="text-center">
                           <div className="text-lg font-bold">{lesson.completionRate}%</div>
-                          <div className="text-xs text-gray-600">Completion</div>
+                          <div className="text-xs text-gray-600">Conclusão</div>
                           <Progress value={lesson.completionRate} className="w-20 h-2 mt-1" />
                         </div>
 
@@ -349,32 +349,32 @@ export default function TeacherCoursePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Performance Trends</CardTitle>
-                  <CardDescription>Student engagement and completion rates</CardDescription>
+                  <CardTitle>Tendências de Desempenho</CardTitle>
+                  <CardDescription>Engajamento dos alunos e taxas de conclusão</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span>Students at risk ({"<"}50% progress)</span>
+                      <span>Alunos em risco ({"<"}50% progress)</span>
                       <div className="flex items-center">
                         <AlertCircle className="h-4 w-4 text-red-500 mr-1" />
-                        <span className="font-bold">3 students</span>
+                        <span className="font-bold">3 alunos</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Students on track ({">"}80% progress)</span>
+                      <span>Alunos no caminho ({">"}80% progress)</span>
                       <div className="flex items-center">
                         <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
                         <span className="font-bold">18 students</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Average time per lesson</span>
+                      <span>Tempo médio por aula</span>
                       <span className="font-bold">52 minutes</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Most challenging lesson</span>
-                      <span className="font-bold">Data Structures</span>
+                      <span>Aula mais desafiadora</span>
+                      <span className="font-bold">Estruturas de Dados</span>
                     </div>
                   </div>
                 </CardContent>
@@ -382,31 +382,31 @@ export default function TeacherCoursePage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Engagement Metrics</CardTitle>
-                  <CardDescription>Student activity and participation</CardDescription>
+                  <CardTitle>Estruturas de Dados</CardTitle>
+                  <CardDescription>Atividade e participação dos alunos</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span>Daily active students</span>
+                      <span>Alunos ativos diariamente</span>
                       <div className="flex items-center">
                         <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
                         <span className="font-bold">22/28</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Quiz participation rate</span>
+                      <span>Taxa de participação em quizzes</span>
                       <div className="flex items-center">
                         <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
                         <span className="font-bold">78%</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Average session duration</span>
+                      <span>Duração média da sessão</span>
                       <span className="font-bold">45 minutes</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Questions asked this week</span>
+                      <span>Perguntas feitas esta semana</span>
                       <span className="font-bold">12</span>
                     </div>
                   </div>
