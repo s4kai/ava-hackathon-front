@@ -11,9 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GraduationCap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+import Image from "next/image";
+import logo from "@/public/images/logo.png"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,12 +29,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <GraduationCap className="h-12 w-12 text-blue-600 mr-2" />
-            <h1 className="text-4xl font-bold text-gray-900">EduFlow LMS</h1>
+            <Image src={logo}  width={100} height={100} alt="Logo" />
+            <h1 className="text-4xl font-bold text-primary-foreground">Acad<span className="text-primary">IA</span></h1>
           </div>
         </div>
 
@@ -56,7 +58,7 @@ export default function LoginPage() {
                   <Input
                     id="student-email"
                     type="email"
-                    placeholder="student@example.com"
+                    placeholder="estudante@exemplo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -66,7 +68,7 @@ export default function LoginPage() {
                   <Input
                     id="student-password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="Insira sua senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -85,7 +87,7 @@ export default function LoginPage() {
                   <Input
                     id="teacher-email"
                     type="email"
-                    placeholder="teacher@example.com"
+                    placeholder="professor@exemplo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -95,7 +97,7 @@ export default function LoginPage() {
                   <Input
                     id="teacher-password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="Insira sua senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />

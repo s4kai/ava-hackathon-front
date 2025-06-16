@@ -93,7 +93,7 @@ export default function StudentDashboard() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
-                <Trophy className="h-8 w-8 text-yellow-600" />
+                <Trophy className="h-8 w-8 text-primary" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Média em Questionários</p>
                   <p className="text-2xl font-bold text-gray-900">87%</p>
@@ -176,7 +176,7 @@ export default function StudentDashboard() {
                 {recentActivity.map((activity, index) => (
                   <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                     {activity.type === "quiz" ? (
-                      <Trophy className="h-5 w-5 text-yellow-600" />
+                      <Trophy className="h-5 w-5 text-primary" />
                     ) : (
                       <CheckCircle className="h-5 w-5 text-green-600" />
                     )}

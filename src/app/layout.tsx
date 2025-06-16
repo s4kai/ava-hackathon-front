@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.dev",
+  title: "AcadIA - Plataforma de Personalização Acadêmica com IA | Solução para Faculdades e Professores",
+  description: "Solução inovadora que utiliza IA para personalizar o ensino superior, reduzir evasão e auxiliar professores com materiais adaptados e monitoramento individualizado de alunos.",
+  keywords: ['educação superior', 'personalização acadêmica', 'IA na educação', 'redução de evasão', 'ensino adaptativo', 'ferramentas para professores', 'monitoramento de alunos', 'materiais personalizados']
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body>{children}</body>
     </html>
   );

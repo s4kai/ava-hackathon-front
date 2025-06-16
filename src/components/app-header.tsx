@@ -26,6 +26,9 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 
+import Image from "next/image";
+import logo from "@/public/images/logo-text_temp.png"
+
 // Simulated navigation items
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
@@ -47,12 +50,7 @@ export const AppHeader = () => {
           {/* Logo Section */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">
-                  L
-                </span>
-              </div>
-              <span className="hidden font-bold sm:inline-block">Logo</span>
+              <Image src={logo} width={150} height={35} alt="Logo" />
             </Link>
           </div>
 
@@ -66,7 +64,7 @@ export const AppHeader = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors text-primary-foreground hover:bg-accent ${
                     isActive
                       ? "bg-accent text-primary font-semibold"
                       : "text-muted-foreground"
@@ -81,12 +79,6 @@ export const AppHeader = () => {
 
           {/* Right Section - User Menu & Mobile Toggle */}
           <div className="flex items-center space-x-2">
-            {/* Search Button (Desktop) */}
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
-              <Search className="h-4 w-4" />
-              <span className="sr-only">Pesquisar</span>
-            </Button>
-
             {/* Notifications Button */}
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-4 w-4" />
