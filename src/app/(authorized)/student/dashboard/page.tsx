@@ -202,7 +202,7 @@ export default function StudentDashboard() {
                       </div>
 
                       <div className="flex items-center justify-end">
-                        <Link href={`/student/course/${subject.id}`}>
+                        <Link href={`/student/subject/${subject.id}`}>
                           <Button size="sm">
                             <Play className="h-4 w-4 mr-1" />
                             Continuar
