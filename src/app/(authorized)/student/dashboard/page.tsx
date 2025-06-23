@@ -78,10 +78,8 @@ export default function StudentDashboard() {
       const response = await api.get("subjects/student/1");
       setDataSubjects(response.data);
       setLoading(false);
-
-      console.log("Fetched subjects:", response.data);
     } catch (error) {
-      console.error("Error fetching subjects:", error);
+      setLoading(false);
       setDataSubjects([]);
     }
   };

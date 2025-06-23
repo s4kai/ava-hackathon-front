@@ -1,46 +1,108 @@
-"use client"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+"use client";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
-  Users,
-  BookOpen,
-  Plus,
-  Edit,
-  Trash2,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertCircle,
   ArrowLeft,
   BarChart3,
-  Clock,
+  BookOpen,
   CheckCircle,
-  AlertCircle,
-  TrendingUp,
+  Clock,
+  Edit,
+  Plus,
+  Trash2,
   TrendingDown,
-} from "lucide-react"
-import Link from "next/link"
-import { useParams } from "next/navigation"
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const mockCourseData = {
   1: {
     title: "Introduction to Computer Science",
-    description: "A comprehensive introduction to computer science fundamentals",
+    description:
+      "A comprehensive introduction to computer science fundamentals",
     students: 28,
     lessons: 12,
     avgProgress: 75,
     lessons_data: [
-      { id: 1, title: "Introduction to Programming", completionRate: 100, avgTime: "45 min" },
-      { id: 2, title: "Variables and Data Types", completionRate: 96, avgTime: "38 min" },
-      { id: 3, title: "Control Structures", completionRate: 89, avgTime: "52 min" },
-      { id: 4, title: "Functions and Methods", completionRate: 82, avgTime: "48 min" },
-      { id: 5, title: "Arrays and Lists", completionRate: 75, avgTime: "55 min" },
-      { id: 6, title: "Object-Oriented Programming", completionRate: 68, avgTime: "62 min" },
-      { id: 7, title: "Inheritance and Polymorphism", completionRate: 61, avgTime: "58 min" },
-      { id: 8, title: "Exception Handling", completionRate: 54, avgTime: "45 min" },
-      { id: 9, title: "File I/O Operations", completionRate: 46, avgTime: "50 min" },
-      { id: 10, title: "Data Structures", completionRate: 32, avgTime: "65 min" },
-      { id: 11, title: "Algorithms and Complexity", completionRate: 18, avgTime: "70 min" },
+      {
+        id: 1,
+        title: "Introduction to Programming",
+        completionRate: 100,
+        avgTime: "45 min",
+      },
+      {
+        id: 2,
+        title: "Variables and Data Types",
+        completionRate: 96,
+        avgTime: "38 min",
+      },
+      {
+        id: 3,
+        title: "Control Structures",
+        completionRate: 89,
+        avgTime: "52 min",
+      },
+      {
+        id: 4,
+        title: "Functions and Methods",
+        completionRate: 82,
+        avgTime: "48 min",
+      },
+      {
+        id: 5,
+        title: "Arrays and Lists",
+        completionRate: 75,
+        avgTime: "55 min",
+      },
+      {
+        id: 6,
+        title: "Object-Oriented Programming",
+        completionRate: 68,
+        avgTime: "62 min",
+      },
+      {
+        id: 7,
+        title: "Inheritance and Polymorphism",
+        completionRate: 61,
+        avgTime: "58 min",
+      },
+      {
+        id: 8,
+        title: "Exception Handling",
+        completionRate: 54,
+        avgTime: "45 min",
+      },
+      {
+        id: 9,
+        title: "File I/O Operations",
+        completionRate: 46,
+        avgTime: "50 min",
+      },
+      {
+        id: 10,
+        title: "Data Structures",
+        completionRate: 32,
+        avgTime: "65 min",
+      },
+      {
+        id: 11,
+        title: "Algorithms and Complexity",
+        completionRate: 18,
+        avgTime: "70 min",
+      },
       { id: 12, title: "Final Project", completionRate: 7, avgTime: "120 min" },
     ],
     students_data: [
@@ -52,31 +114,84 @@ const mockCourseData = {
         lastActive: "2 hours ago",
         quizAvg: 88,
       },
-      { id: 2, name: "Bob Smith", email: "bob@example.com", progress: 85, lastActive: "1 day ago", quizAvg: 82 },
-      { id: 3, name: "Carol Davis", email: "carol@example.com", progress: 78, lastActive: "3 hours ago", quizAvg: 91 },
-      { id: 4, name: "David Wilson", email: "david@example.com", progress: 65, lastActive: "2 days ago", quizAvg: 76 },
-      { id: 5, name: "Emma Brown", email: "emma@example.com", progress: 88, lastActive: "5 hours ago", quizAvg: 85 },
-      { id: 6, name: "Frank Miller", email: "frank@example.com", progress: 42, lastActive: "1 week ago", quizAvg: 68 },
+      {
+        id: 2,
+        name: "Bob Smith",
+        email: "bob@example.com",
+        progress: 85,
+        lastActive: "1 day ago",
+        quizAvg: 82,
+      },
+      {
+        id: 3,
+        name: "Carol Davis",
+        email: "carol@example.com",
+        progress: 78,
+        lastActive: "3 hours ago",
+        quizAvg: 91,
+      },
+      {
+        id: 4,
+        name: "David Wilson",
+        email: "david@example.com",
+        progress: 65,
+        lastActive: "2 days ago",
+        quizAvg: 76,
+      },
+      {
+        id: 5,
+        name: "Emma Brown",
+        email: "emma@example.com",
+        progress: 88,
+        lastActive: "5 hours ago",
+        quizAvg: 85,
+      },
+      {
+        id: 6,
+        name: "Frank Miller",
+        email: "frank@example.com",
+        progress: 42,
+        lastActive: "1 week ago",
+        quizAvg: 68,
+      },
     ],
     quizzes: [
-      { id: 1, title: "Programming Basics Quiz", avgScore: 85, completions: 26, created: "2024-01-10" },
-      { id: 2, title: "Functions and OOP Quiz", avgScore: 78, completions: 22, created: "2024-01-15" },
-      { id: 3, title: "Advanced Concepts Quiz", avgScore: 72, completions: 15, created: "2024-01-20" },
+      {
+        id: 1,
+        title: "Programming Basics Quiz",
+        avgScore: 85,
+        completions: 26,
+        created: "2024-01-10",
+      },
+      {
+        id: 2,
+        title: "Functions and OOP Quiz",
+        avgScore: 78,
+        completions: 22,
+        created: "2024-01-15",
+      },
+      {
+        id: 3,
+        title: "Advanced Concepts Quiz",
+        avgScore: 72,
+        completions: 15,
+        created: "2024-01-20",
+      },
     ],
   },
-}
+};
 
 export default function TeacherCoursePage() {
-  const params = useParams()
-  const courseId = Number.parseInt(params.id as string)
-  const course = mockCourseData[courseId as keyof typeof mockCourseData]
+  const params = useParams();
+  const courseId = Number.parseInt(params.id as string);
+  const course = mockCourseData[courseId as keyof typeof mockCourseData];
 
   if (!course) {
-    return <div>Curso não encontrado</div>
+    return <div>Curso não encontrado</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 w-full">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -89,7 +204,9 @@ export default function TeacherCoursePage() {
 
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{course.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                {course.title}
+              </h1>
               <p className="text-gray-600 mb-4">{course.description}</p>
               <div className="flex items-center gap-6 text-sm text-gray-600">
                 <span className="flex items-center">
@@ -136,8 +253,12 @@ export default function TeacherCoursePage() {
                   <div className="flex items-center">
                     <Users className="h-8 w-8 text-blue-600" />
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Alunos Matriculados</p>
-                      <p className="text-2xl font-bold text-gray-900">{course.students}</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Alunos Matriculados
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {course.students}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -148,8 +269,12 @@ export default function TeacherCoursePage() {
                   <div className="flex items-center">
                     <TrendingUp className="h-8 w-8 text-green-600" />
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Progresso Médio</p>
-                      <p className="text-2xl font-bold text-gray-900">{course.avgProgress}%</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Progresso Médio
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {course.avgProgress}%
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -160,7 +285,9 @@ export default function TeacherCoursePage() {
                   <div className="flex items-center">
                     <BarChart3 className="h-8 w-8 text-purple-600" />
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Média de Quizzes</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Média de Quizzes
+                      </p>
                       <p className="text-2xl font-bold text-gray-900">82%</p>
                     </div>
                   </div>
@@ -176,7 +303,10 @@ export default function TeacherCoursePage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {course.students_data.slice(0, 5).map((student) => (
-                    <div key={student.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div
+                      key={student.id}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
                       <div className="flex items-center space-x-3">
                         <Avatar>
                           <AvatarFallback>
@@ -188,18 +318,30 @@ export default function TeacherCoursePage() {
                         </Avatar>
                         <div>
                           <p className="font-medium">{student.name}</p>
-                          <p className="text-sm text-gray-600">Progresso: {student.progress}%</p>
+                          <p className="text-sm text-gray-600">
+                            Progresso: {student.progress}%
+                          </p>
                         </div>
                       </div>
                       <div className="text-right">
                         <Badge
                           variant={
-                            student.progress >= 80 ? "default" : student.progress >= 60 ? "secondary" : "destructive"
+                            student.progress >= 80
+                              ? "default"
+                              : student.progress >= 60
+                              ? "secondary"
+                              : "destructive"
                           }
                         >
-                          {student.progress >= 80 ? "On Track" : student.progress >= 60 ? "Behind" : "At Risk"}
+                          {student.progress >= 80
+                            ? "On Track"
+                            : student.progress >= 60
+                            ? "Behind"
+                            : "At Risk"}
                         </Badge>
-                        <p className="text-xs text-gray-500 mt-1">{student.lastActive}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {student.lastActive}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -209,17 +351,26 @@ export default function TeacherCoursePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Desempenho nos Quiz</CardTitle>
-                  <CardDescription>Estatísticas recentes dos quiz</CardDescription>
+                  <CardDescription>
+                    Estatísticas recentes dos quiz
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {course.quizzes.map((quiz) => (
-                    <div key={quiz.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div
+                      key={quiz.id}
+                      className="flex items-center justify-between p-3 border rounded-lg"
+                    >
                       <div>
                         <h4 className="font-medium">{quiz.title}</h4>
-                        <p className="text-sm text-gray-600">{quiz.completions} conclusões</p>
+                        <p className="text-sm text-gray-600">
+                          {quiz.completions} conclusões
+                        </p>
                       </div>
                       <div className="text-right">
-                        <div className="text-lg font-bold text-green-600">{quiz.avgScore}%</div>
+                        <div className="text-lg font-bold text-green-600">
+                          {quiz.avgScore}%
+                        </div>
                         <p className="text-xs text-gray-500">Média</p>
                       </div>
                     </div>
@@ -233,7 +384,9 @@ export default function TeacherCoursePage() {
             <Card>
               <CardHeader>
                 <CardTitle>Desempenho dos Alunos</CardTitle>
-                <CardDescription>Acompanhe o progresso e desempenho individual dos alunos</CardDescription>
+                <CardDescription>
+                  Acompanhe o progresso e desempenho individual dos alunos
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -253,21 +406,34 @@ export default function TeacherCoursePage() {
                         </Avatar>
                         <div>
                           <h3 className="font-medium">{student.name}</h3>
-                          <p className="text-sm text-gray-600">{student.email}</p>
-                          <p className="text-xs text-gray-500">Última atividade: {student.lastActive}</p>
+                          <p className="text-sm text-gray-600">
+                            {student.email}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Última atividade: {student.lastActive}
+                          </p>
                         </div>
                       </div>
 
                       <div className="flex items-center space-x-6">
                         <div className="text-center">
-                          <div className="text-lg font-bold">{student.progress}%</div>
+                          <div className="text-lg font-bold">
+                            {student.progress}%
+                          </div>
                           <div className="text-xs text-gray-600">Progresso</div>
-                          <Progress value={student.progress} className="w-20 h-2 mt-1" />
+                          <Progress
+                            value={student.progress}
+                            className="w-20 h-2 mt-1"
+                          />
                         </div>
 
                         <div className="text-center">
-                          <div className="text-lg font-bold">{student.quizAvg}%</div>
-                          <div className="text-xs text-gray-600">Média de Quizzes</div>
+                          <div className="text-lg font-bold">
+                            {student.quizAvg}%
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            Média de Quizzes
+                          </div>
                         </div>
 
                         <div className="flex space-x-2">
@@ -291,7 +457,10 @@ export default function TeacherCoursePage() {
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle>Aulas do Curso</CardTitle>
-                  <CardDescription>Gerencie o conteúdo das aulas e acompanhe as taxas de conclusão</CardDescription>
+                  <CardDescription>
+                    Gerencie o conteúdo das aulas e acompanhe as taxas de
+                    conclusão
+                  </CardDescription>
                 </div>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -306,7 +475,9 @@ export default function TeacherCoursePage() {
                       className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center space-x-4">
-                        <div className="text-lg font-bold text-gray-400">#{lesson.id}</div>
+                        <div className="text-lg font-bold text-gray-400">
+                          #{lesson.id}
+                        </div>
                         <div>
                           <h3 className="font-medium">{lesson.title}</h3>
                           <div className="flex items-center space-x-4 text-sm text-gray-600">
@@ -316,7 +487,10 @@ export default function TeacherCoursePage() {
                             </span>
                             <span className="flex items-center">
                               <Users className="h-4 w-4 mr-1" />
-                              {Math.round((lesson.completionRate / 100) * course.students)} concluíram
+                              {Math.round(
+                                (lesson.completionRate / 100) * course.students
+                              )}{" "}
+                              concluíram
                             </span>
                           </div>
                         </div>
@@ -324,9 +498,14 @@ export default function TeacherCoursePage() {
 
                       <div className="flex items-center space-x-4">
                         <div className="text-center">
-                          <div className="text-lg font-bold">{lesson.completionRate}%</div>
+                          <div className="text-lg font-bold">
+                            {lesson.completionRate}%
+                          </div>
                           <div className="text-xs text-gray-600">Conclusão</div>
-                          <Progress value={lesson.completionRate} className="w-20 h-2 mt-1" />
+                          <Progress
+                            value={lesson.completionRate}
+                            className="w-20 h-2 mt-1"
+                          />
                         </div>
 
                         <div className="flex space-x-2">
@@ -350,7 +529,9 @@ export default function TeacherCoursePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Tendências de Desempenho</CardTitle>
-                  <CardDescription>Engajamento dos alunos e taxas de conclusão</CardDescription>
+                  <CardDescription>
+                    Engajamento dos alunos e taxas de conclusão
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -383,7 +564,9 @@ export default function TeacherCoursePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Estruturas de Dados</CardTitle>
-                  <CardDescription>Atividade e participação dos alunos</CardDescription>
+                  <CardDescription>
+                    Atividade e participação dos alunos
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -417,5 +600,5 @@ export default function TeacherCoursePage() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }

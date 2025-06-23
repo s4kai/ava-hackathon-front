@@ -129,7 +129,7 @@ export default function CreateQuizPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 w-full">
       <div className="max-w-6xl mx-auto">
         <div className="mb-6">
           <Link href="/teacher/dashboard">
@@ -144,9 +144,7 @@ export default function CreateQuizPage() {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 Criar Novo Quiz
               </h1>
-              <p className="text-gray-600">
-                Crie avaliações para seus alunos
-              </p>
+              <p className="text-gray-600">Crie avaliações para seus alunos</p>
             </div>
             <div className="flex space-x-3">
               <Button onClick={saveQuiz}>
@@ -254,7 +252,9 @@ export default function CreateQuizPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="beginner">Iniciante</SelectItem>
-                      <SelectItem value="intermediate">Intermediário</SelectItem>
+                      <SelectItem value="intermediate">
+                        Intermediário
+                      </SelectItem>
                       <SelectItem value="advanced">Avançado</SelectItem>
                     </SelectContent>
                   </Select>
@@ -407,7 +407,8 @@ export default function CreateQuizPage() {
                 <>
                   {questions.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
-                    Nenhuma pergunta adicionada ainda. Clique em "Adicionar Pergunta" para começar.
+                      Nenhuma pergunta adicionada ainda. Clique em "Adicionar
+                      Pergunta" para começar.
                     </div>
                   ) : (
                     questions.map((question, index) => (
