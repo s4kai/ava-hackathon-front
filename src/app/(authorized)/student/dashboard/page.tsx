@@ -21,42 +21,6 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const mockCourses = [
-  {
-    id: 1,
-    title: "Introduction to Computer Science",
-    instructor: "Dr. Sarah Johnson",
-    progress: 75,
-    totalLessons: 12,
-    completedLessons: 9,
-    nextLesson: "Data Structures",
-    dueDate: "2024-01-15",
-    color: "bg-blue-500",
-  },
-  {
-    id: 2,
-    title: "Web Development Fundamentals",
-    instructor: "Prof. Mike Chen",
-    progress: 45,
-    totalLessons: 16,
-    completedLessons: 7,
-    nextLesson: "JavaScript Basics",
-    dueDate: "2024-01-20",
-    color: "bg-green-500",
-  },
-  {
-    id: 3,
-    title: "Database Management Systems",
-    instructor: "Dr. Emily Rodriguez",
-    progress: 90,
-    totalLessons: 10,
-    completedLessons: 9,
-    nextLesson: "Advanced Queries",
-    dueDate: "2024-01-12",
-    color: "bg-purple-500",
-  },
-];
-
 const recentActivity = [
   { type: "quiz", course: "Computer Science", score: 85, date: "2 hours ago" },
   {

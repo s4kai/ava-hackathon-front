@@ -16,7 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import {
   ArrowLeft,
@@ -129,20 +128,6 @@ const mockCourseData = {
     ],
     quizzes: [
       {
-        id: 1,
-        title: "Programming Basics Quiz",
-        lessons: "1-3",
-        score: 85,
-        completed: true,
-      },
-      {
-        id: 2,
-        title: "Functions and OOP Quiz",
-        lessons: "4-6",
-        score: 92,
-        completed: true,
-      },
-      {
         id: 3,
         title: "Advanced Concepts Quiz",
         lessons: "7-9",
@@ -152,14 +137,6 @@ const mockCourseData = {
     ],
     materials: [
       { id: 1, title: "Course Syllabus", type: "pdf", size: "2.3 MB" },
-      {
-        id: 2,
-        title: "Programming Reference Guide",
-        type: "pdf",
-        size: "5.1 MB",
-      },
-      { id: 3, title: "Code Examples", type: "zip", size: "12.4 MB" },
-      { id: 4, title: "Additional Reading List", type: "pdf", size: "1.8 MB" },
     ],
   },
 };
@@ -200,8 +177,8 @@ export default function CoursePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen max-w-7xl w-full bg-gray-50 p-6">
+      <div className="mx-auto">
         {/* Header */}
         <div className="mb-6">
           <Link href="/student/dashboard">
@@ -219,6 +196,9 @@ export default function CoursePage() {
               <p className="text-gray-600 mb-4">
                 Instrutor: {subject.teachers?.[0]?.name || "Desconhecido"}
               </p>
+              <p className="text-gray-600 mb-4">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est officia in sequi, aspernatur deleniti ratione nobis illo vero a ipsam exercitationem totam ut fugiat obcaecati molestias odio ea voluptas id.
+              </p>
               <p className="text-gray-700 max-w-3xl">{subject.code}</p>
             </div>
           </div>
@@ -227,181 +207,148 @@ export default function CoursePage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <Tabs defaultValue="lessons" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="lessons">Aulas</TabsTrigger>
-                <TabsTrigger value="quizzes">Questiónarios</TabsTrigger>
-                <TabsTrigger value="materials">Materiais</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="lessons" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Materiais do Curso</CardTitle>
-                    <CardDescription>
-                      Baixe recursos e refências adicionais
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Accordion type="single" collapsible>
-                      <div className="space-y-3">
-                        {subject.lessons?.map((lesson) => (
-                          <AccordionItem
-                            value={`lesson-${lesson.id}`}
-                            key={lesson.id}
-                            className={`p-4 border border rounded-lg cursor-pointer transition-colors ${
-                              selectedLesson?.id === lesson.id
-                                ? "border-blue-500 bg-blue-50"
-                                : "hover:bg-gray-50"
-                            }`}
-                          >
-                            <AccordionTrigger
-                              className="hover:no-underline"
-                              onClick={() => setSelectedLesson(lesson)}
-                            >
-                              <div>
-                                <h3 className="font-medium mb-1">
-                                  {lesson.title}
-                                </h3>
-
-                                <div className="flex items-center space-x-4 text-sm text-gray-600">
-                                  <span className="flex items-center">
-                                    {lesson.type === "video" ? (
-                                      <Video className="h-4 w-4 mr-1" />
-                                    ) : (
-                                      <FileText className="h-4 w-4 mr-1" />
-                                    )}
-                                    {lesson.type}
-                                  </span>
-                                  <span className="flex items-center">
-                                    <Clock className="h-4 w-4 mr-1" />
-                                    {new Date(
-                                      lesson.date
-                                    ).toLocaleDateString() ||
-                                      "Data não disponível"}
-                                  </span>
-                                </div>
-                              </div>
-                            </AccordionTrigger>
-
-                            <AccordionContent>
-                              <div className="mt-2">
-                                <p className="text-sm text-gray-600">
-                                  Lorem ipsum dolor sit amet, consectetur
-                                  adipiscing elit. Sed do eiusmod tempor
-                                  incididunt ut labore et dolore magna aliqua.
-                                  Ut enim ad minim veniam, quis nostrud
-                                  exercitation ullamco laboris nisi ut aliquip
-                                  ex ea commodo consequat.
-                                </p>
-
-                                <div className="mt-4 flex justify-end">
-                                  <Button
-                                    variant="outline"
-                                    className="mt-2"
-                                    onClick={() => setSelectedLesson(lesson)}
-                                  >
-                                    <Book className="h-4 w-4 mr-2" />
-                                    Ver Conteúdo
-                                  </Button>
-                                </div>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </div>
-                    </Accordion>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="quizzes" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Questionários do Curso</CardTitle>
-                    <CardDescription>
-                      Teste seus conhecimentos com estas avaliações
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {course.quizzes.map((quiz) => (
-                        <div
-                          key={quiz.id}
-                          className="flex items-center justify-between p-4 border rounded-lg"
+            <Card>
+              <CardHeader>
+                <CardTitle>Lições</CardTitle>
+                <CardDescription>
+                  Acesse as lições, questionários e materiais da disciplina
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Accordion type="single" collapsible className="w-full">
+                  <div className="space-y-3">
+                    {subject.lessons?.map((lesson) => (
+                      <AccordionItem
+                        value={`lesson-${lesson.id}`}
+                        key={lesson.id}
+                        className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                          selectedLesson?.id === lesson.id
+                            ? "border-blue-500"
+                            : "hover:bg-gray-50"
+                        }`}
+                      >
+                        <AccordionTrigger
+                          className="hover:no-underline"
+                          onClick={() => setSelectedLesson(lesson)}
                         >
-                          <div className="flex items-center space-x-3">
-                            <HelpCircle className="h-5 w-5 text-blue-600" />
-                            <div>
-                              <h3 className="font-medium">{quiz.title}</h3>
-                              <p className="text-sm text-gray-600">
-                                Cobre as aulas {quiz.lessons}
-                              </p>
+                          <div>
+                            <h3 className="font-medium mb-1">
+                              {lesson.title}
+                            </h3>
+
+                            <div className="flex items-center space-x-4 text-sm text-gray-600">
+                              <span className="flex items-center">
+                                {lesson.type === "video" ? (
+                                  <Video className="h-4 w-4 mr-1" />
+                                ) : (
+                                  <FileText className="h-4 w-4 mr-1" />
+                                )}
+                                {lesson.type}
+                              </span>
+                              <span className="flex items-center">
+                                <Clock className="h-4 w-4 mr-1" />
+                                {new Date(
+                                  lesson.date
+                                ).toLocaleDateString() ||
+                                  "Data não disponível"}
+                              </span>
                             </div>
                           </div>
+                        </AccordionTrigger>
 
-                          <div className="flex items-center space-x-3">
-                            {quiz.completed && quiz.score && (
-                              <Badge
-                                variant={
-                                  quiz.score >= 80 ? "default" : "secondary"
-                                }
-                              >
-                                Pontuação: {quiz.score}%
-                              </Badge>
-                            )}
-                            <Link href={`/student/quiz/${quiz.id}`}>
+                        <AccordionContent>
+                          <div className="mt-2 flex flex-col md:flex-row items-start justify-between p-4 border rounded-lg gap-4">
+                            <div className="w-full max-w-lg flex">
+                              <p className="text-sm text-gray-600 break-words items-center">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </p>
+                            </div>
+
+                            <div className="w-full md:w-auto mt-2 md:mt-0 flex justify-end">
                               <Button
-                                size="sm"
-                                variant={quiz.completed ? "outline" : "default"}
+                                variant="outline"
+                                className="whitespace-nowrap"
+                                onClick={() => setSelectedLesson(lesson)}
                               >
-                                {quiz.completed ? "Retake" : "Start Quiz"}
+                                <Book className="h-4 w-4 mr-2" />
+                                Ver Conteúdo
                               </Button>
-                            </Link>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="materials" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Materiais do Curso</CardTitle>
-                    <CardDescription>
-                      Baixe recursos e refências adicionais
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {course.materials.map((material) => (
-                        <div
-                          key={material.id}
-                          className="flex items-center justify-between p-4 border rounded-lg"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <FileText className="h-5 w-5 text-gray-600" />
-                            <div>
-                              <h3 className="font-medium">{material.title}</h3>
-                              <p className="text-sm text-gray-600">
-                                {material.type.toUpperCase()} • {material.size}
-                              </p>
                             </div>
                           </div>
+                        </AccordionContent>
 
-                          <Button size="sm" variant="outline">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+                        <AccordionContent className="overflow-auto transition-all duration-300">
+                          <div className="space-y-4">
+                            {course.quizzes.map((quiz) => (
+                              <div
+                                key={quiz.id}
+                                className="flex items-center justify-between p-4 border rounded-lg"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <HelpCircle className="h-5 w-5 text-blue-600" />
+                                  <div>
+                                    <h3 className="font-medium">{quiz.title}</h3>
+                                    <p className="text-sm text-gray-600">
+                                      Cobre as aulas {quiz.lessons}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center space-x-3">
+                                  {quiz.completed && quiz.score && (
+                                    <Badge
+                                      variant={
+                                        quiz.score >= 80 ? "default" : "secondary"
+                                      }
+                                    >
+                                      Pontuação: {quiz.score}%
+                                    </Badge>
+                                  )}
+                                  <Link href={`/student/quiz/${quiz.id}`}>
+                                    <Button
+                                      size="sm"
+                                      variant={quiz.completed ? "outline" : "default"}
+                                    >
+                                      {quiz.completed ? "Retake" : "Start Quiz"}
+                                    </Button>
+                                  </Link>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+
+                        <AccordionContent className="overflow-auto transition-all duration-300">
+                          <div className="space-y-3">
+                            {course.materials.map((material) => (
+                              <div
+                                key={material.id}
+                                className="flex items-center justify-between p-4 border rounded-lg"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <FileText className="h-5 w-5 text-gray-600" />
+                                  <div>
+                                    <h3 className="font-medium">{material.title}</h3>
+                                    <p className="text-sm text-gray-600">
+                                      {material.type.toUpperCase()} • {material.size}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <Button size="sm" variant="outline">
+                                  <Download className="h-4 w-4 mr-2" />
+                                  Download
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </div>
+                </Accordion>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Sidebar */}

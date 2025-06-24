@@ -29,7 +29,6 @@ import { useState } from "react";
 import Image from "next/image";
 import logo from "@/public/images/logo-text_temp.png"
 
-// Simulated navigation items
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
   { name: "Sobre", href: "/about", icon: Info },
@@ -37,15 +36,14 @@ const navigationItems = [
   { name: "Contatos", href: "/contact", icon: Mail },
 ];
 
-// Simulated current route for demonstration
 const currentRoute = "/";
 
 export const AppHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
+      <div className="container mx-auto max-w-7xl px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
           <div className="flex items-center">
@@ -148,7 +146,7 @@ export const AppHeader = () => {
                         href={item.href}
                         className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
                           isActive
-                            ? "bg-accent text-primary font-semibold"
+                            ? "bg-accent text-foreground font-semibold"
                             : "text-muted-foreground"
                         }`}
                         onClick={() => setIsMobileMenuOpen(false)}
