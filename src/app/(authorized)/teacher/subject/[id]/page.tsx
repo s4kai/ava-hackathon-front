@@ -186,7 +186,6 @@ const mockCourseData = {
 export default function TeacherCoursePage() {
   const params = useParams();
   const courseId = Number.parseInt(params.id as string);
-  const course = mockCourseData[courseId as keyof typeof mockCourseData];
 
   const [subject, setSubject] = useState<Subject | null>(null);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
@@ -234,10 +233,6 @@ export default function TeacherCoursePage() {
     return <LoadingComponent />;
   }
 
-  if (!course) {
-    return <div>Curso não encontrado</div>;
-  }
-
   const getDifficultyLabel = (score: number): string => {
     if (score >= 80) return "Fácil";
     if (score >= 50) return "Média";
@@ -283,7 +278,7 @@ export default function TeacherCoursePage() {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 {subject?.name}
               </h1>
-              <p className="text-gray-600 mb-4">{course.description}</p>
+              <p className="text-gray-600 mb-4"></p>
               <div className="flex items-center gap-6 text-sm text-gray-600">
                 <span className="flex items-center">
                   <Users className="h-4 w-4 mr-1" />
@@ -341,7 +336,7 @@ export default function TeacherCoursePage() {
                         Média de Quizzes
                       </p>
                       <p className="text-2xl font-bold text-gray-900">
-                        {quizzesAnalysis?.averagePercentageScore}%
+                        {quizzesAnalysis?.averagePercentageScore || 0}%
                       </p>
                     </div>
                   </div>
@@ -357,7 +352,7 @@ export default function TeacherCoursePage() {
                         Maior Nota
                       </p>
                       <p className="text-2xl font-bold text-gray-900">
-                        {quizzesAnalysis?.highestScore}
+                        {quizzesAnalysis?.highestScore || 0}
                       </p>
                     </div>
                   </div>
@@ -373,7 +368,7 @@ export default function TeacherCoursePage() {
                         Menor Nota
                       </p>
                       <p className="text-2xl font-bold text-gray-900">
-                        {quizzesAnalysis?.lowestScore}
+                        {quizzesAnalysis?.lowestScore || 0}
                       </p>
                     </div>
                   </div>
@@ -512,7 +507,7 @@ export default function TeacherCoursePage() {
                               studentAnalysis.percentageScore
                             )}`}
                           >
-                            {studentAnalysis.percentageScore}%
+                            {studentAnalysis.percentageScore | 0}%
                           </div>
                           <div className="text-xs text-gray-600">
                             Média de taxa de acerto
@@ -624,7 +619,7 @@ export default function TeacherCoursePage() {
                     <div className="flex items-center justify-between">
                       <span>Tempo médio por quiz</span>
                       <span className="font-bold">
-                        {quizzesAnalysis?.avgTimeTaken}
+                        {quizzesAnalysis?.avgTimeTaken || 0}
                       </span>
                     </div>
 
@@ -634,7 +629,7 @@ export default function TeacherCoursePage() {
                         <span className="font-bold">
                           {((quizzesAnalysis?.totalSubmissions || 0) * 100) /
                             ((quizzesAnalysis?.totalQuizzes || 0) *
-                              (subject?.students?.length || 0))}
+                              (subject?.students?.length || 0)) || 0}
                           %
                         </span>
                       </div>
