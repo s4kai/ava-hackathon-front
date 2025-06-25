@@ -117,7 +117,6 @@ export default function CreateQuizPage() {
   };
 
   const saveQuiz = () => {
-    // In a real app, this would save to a database
     console.log("Saving quiz:", {
       title: quizTitle,
       description: quizDescription,
@@ -125,7 +124,6 @@ export default function CreateQuizPage() {
       timeLimit,
       questions,
     });
-    alert("Quiz saved successfully!");
   };
 
   return (
@@ -176,7 +174,7 @@ export default function CreateQuizPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="course-select">Curso</Label>
+                  <Label htmlFor="course-select">Materia</Label>
                   <Select
                     value={selectedCourse}
                     onValueChange={setSelectedCourse}
@@ -233,7 +231,7 @@ export default function CreateQuizPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="ai-topic">Tópico</Label>
                   <Input
@@ -242,22 +240,6 @@ export default function CreateQuizPage() {
                     value={aiTopic}
                     onChange={(e) => setAiTopic(e.target.value)}
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="ai-difficulty">Nível de Dificuldade</Label>
-                  <Select value={aiDifficulty} onValueChange={setAiDifficulty}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select difficulty" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="beginner">Iniciante</SelectItem>
-                      <SelectItem value="intermediate">
-                        Intermediário
-                      </SelectItem>
-                      <SelectItem value="advanced">Avançado</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
 
                 <div className="space-y-2">
