@@ -6,6 +6,9 @@ interface Subject {
   teachers?: Teacher[];
   students?: Student[];
   lessons?: Lesson[];
+
+  enrolledStudents?: number;
+  lessonsAmount?: number;
 }
 
 interface Student {
@@ -26,4 +29,53 @@ interface Lesson {
   date: string;
   type: string;
   content: string;
+}
+
+interface QuizAnalysis {
+  quizId: number;
+  title: string;
+  totalSubmissions: number;
+  averageScore: number;
+  percentageScore: number;
+  highestScore: number;
+  lowestScore: number;
+}
+
+interface QuizzesAnalysis {
+  subjectId: number;
+  quizzes: QuizAnalysis[];
+  totalQuizzes: number;
+  averageScore: number;
+  totalSubmissions: number;
+  averagePercentageScore: number;
+  highestScore: number;
+  lowestScore: number;
+  avgTimeTaken: number;
+}
+
+interface StudentAnalysis {
+  studentId: number;
+  student: Student;
+  totalQuizzes: number;
+  averageScore: number;
+  averageTimeTaken: number;
+  percentageScore: number;
+  totalScore: number;
+  totalTimeTaken: number;
+}
+
+interface StudentsAnalysis {
+  subjectId: number;
+  students: StudentAnalysis[];
+}
+
+interface RecentActivity {
+  studentId: number;
+  studentName: string;
+  quizId: number;
+  quizTitle: string;
+  score: number;
+  percentageScore: number;
+  timeTaken: number;
+  createdAt: string;
 }

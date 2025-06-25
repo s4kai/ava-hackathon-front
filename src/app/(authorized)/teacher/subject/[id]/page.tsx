@@ -1,4 +1,5 @@
 "use client";
+import { LoadingComponent } from "@/components/loading";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,8 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { api } from "@/lib/api";
 import {
   AlertCircle,
   ArrowLeft,
@@ -27,6 +28,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const mockCourseData = {
   1: {
@@ -186,9 +188,83 @@ export default function TeacherCoursePage() {
   const courseId = Number.parseInt(params.id as string);
   const course = mockCourseData[courseId as keyof typeof mockCourseData];
 
+  const [subject, setSubject] = useState<Subject | null>(null);
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+
+  const [quizzesAnalysis, setQuizzesAnalysis] =
+    useState<QuizzesAnalysis | null>(null);
+
+  const [studentsAnalysis, setStudentsAnalysis] =
+    useState<StudentsAnalysis | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async (id: number) => {
+    try {
+      const subjectData = await api.get(`/subjects/${id}`);
+      setSubject(subjectData.data);
+
+      const quizData = await api.get(`/subjects/${id}/quiz-analysis`);
+      setQuizzesAnalysis(quizData.data);
+
+      const studentAnalysis = await api.get(
+        `/subjects/${id}/students-quiz-analytics`
+      );
+      setStudentsAnalysis(studentAnalysis.data);
+
+      const recentActivityData = await api.get(
+        `/subjects/${id}/recent-activity`
+      );
+      setRecentActivity(recentActivityData.data);
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setSubject(null);
+      setQuizzesAnalysis(null);
+      console.error("Erro ao buscar dados do curso:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(courseId);
+  }, [courseId]);
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
+
   if (!course) {
     return <div>Curso não encontrado</div>;
   }
+
+  const getDifficultyLabel = (score: number): string => {
+    if (score >= 80) return "Fácil";
+    if (score >= 50) return "Média";
+    return "Difícil";
+  };
+
+  const getColorClass = (score: number): string => {
+    if (score >= 80) return "text-green-600";
+    if (score >= 50) return "text-yellow-600";
+    return "text-red-600";
+  };
+
+  const atRiskCount =
+    studentsAnalysis?.students.filter((s) => s.percentageScore < 50).length ||
+    0;
+
+  const onTrackCount =
+    studentsAnalysis?.students.filter((s) => s.percentageScore >= 50).length ||
+    0;
+
+  const mostDifficultQuiz = quizzesAnalysis?.quizzes?.length
+    ? quizzesAnalysis.quizzes.reduce(
+        (prev, current) =>
+          prev.percentageScore > current.percentageScore ? prev : current,
+        quizzesAnalysis.quizzes[0]
+      ).title
+    : "Nenhum Quiz Disponível";
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 w-full">
@@ -205,29 +281,21 @@ export default function TeacherCoursePage() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {course.title}
+                {subject?.name}
               </h1>
               <p className="text-gray-600 mb-4">{course.description}</p>
               <div className="flex items-center gap-6 text-sm text-gray-600">
                 <span className="flex items-center">
                   <Users className="h-4 w-4 mr-1" />
-                  {course.students} Alunos
+                  {subject?.students?.length} Alunos
                 </span>
                 <span className="flex items-center">
                   <BookOpen className="h-4 w-4 mr-1" />
-                  {course.lessons} Aulas
-                </span>
-                <span className="flex items-center">
-                  <BarChart3 className="h-4 w-4 mr-1" />
-                  {course.avgProgress}% Progresso Médio
+                  {subject?.lessons?.length} Aulas
                 </span>
               </div>
             </div>
             <div className="flex space-x-3">
-              <Button variant="outline">
-                <Edit className="h-4 w-4 mr-2" />
-                Editar Curso
-              </Button>
               <Link href="/teacher/quiz/create">
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -247,7 +315,7 @@ export default function TeacherCoursePage() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center">
@@ -257,23 +325,7 @@ export default function TeacherCoursePage() {
                         Alunos Matriculados
                       </p>
                       <p className="text-2xl font-bold text-gray-900">
-                        {course.students}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <TrendingUp className="h-8 w-8 text-green-600" />
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">
-                        Progresso Médio
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {course.avgProgress}%
+                        {subject?.students?.length || 0}
                       </p>
                     </div>
                   </div>
@@ -288,7 +340,41 @@ export default function TeacherCoursePage() {
                       <p className="text-sm font-medium text-gray-600">
                         Média de Quizzes
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">82%</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {quizzesAnalysis?.averagePercentageScore}%
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <TrendingUp className="h-8 w-8 text-green-600" />
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-gray-600">
+                        Maior Nota
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {quizzesAnalysis?.highestScore}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <TrendingDown className="h-8 w-8 text-red-600" />
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-gray-600">
+                        Menor Nota
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {quizzesAnalysis?.lowestScore}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -302,45 +388,41 @@ export default function TeacherCoursePage() {
                   <CardDescription>Últimos envios e conclusões</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {course.students_data.slice(0, 5).map((student) => (
+                  {recentActivity.map((recentActivity) => (
                     <div
-                      key={student.id}
+                      key={`${recentActivity.quizId}-${recentActivity.studentId}`}
                       className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
                     >
                       <div className="flex items-center space-x-3">
                         <Avatar>
                           <AvatarFallback>
-                            {student.name
+                            {recentActivity.studentName
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">{student.name}</p>
+                          <p className="font-medium">
+                            {recentActivity.studentName}
+                          </p>
                           <p className="text-sm text-gray-600">
-                            Progresso: {student.progress}%
+                            Taxa de Acerto: {recentActivity.percentageScore}%
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <Badge
-                          variant={
-                            student.progress >= 80
-                              ? "default"
-                              : student.progress >= 60
-                              ? "secondary"
-                              : "destructive"
-                          }
-                        >
-                          {student.progress >= 80
-                            ? "On Track"
-                            : student.progress >= 60
-                            ? "Behind"
-                            : "At Risk"}
+                        <Badge variant="default">
+                          {getDifficultyLabel(recentActivity.percentageScore)}
                         </Badge>
                         <p className="text-xs text-gray-500 mt-1">
-                          {student.lastActive}
+                          {new Date(
+                            recentActivity.createdAt
+                          ).toLocaleDateString("pt-BR", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })}
                         </p>
                       </div>
                     </div>
@@ -356,22 +438,25 @@ export default function TeacherCoursePage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {course.quizzes.map((quiz) => (
+                  {quizzesAnalysis?.quizzes.map((quiz) => (
                     <div
-                      key={quiz.id}
+                      key={quiz.quizId}
                       className="flex items-center justify-between p-3 border rounded-lg"
                     >
                       <div>
                         <h4 className="font-medium">{quiz.title}</h4>
                         <p className="text-sm text-gray-600">
-                          {quiz.completions} conclusões
+                          {quiz.totalSubmissions} conclusões
                         </p>
                       </div>
                       <div className="text-right">
                         <div className="text-lg font-bold text-green-600">
-                          {quiz.avgScore}%
+                          {quiz.percentageScore}%
                         </div>
-                        <p className="text-xs text-gray-500">Média</p>
+                        <p className="text-xs text-gray-500">
+                          Dificuldade:{" "}
+                          {getDifficultyLabel(quiz.percentageScore)}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -390,49 +475,47 @@ export default function TeacherCoursePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {course.students_data.map((student) => (
+                  {studentsAnalysis?.students.map((studentAnalysis) => (
                     <div
-                      key={student.id}
+                      key={studentAnalysis.studentId}
                       className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center space-x-4">
                         <Avatar>
                           <AvatarFallback>
-                            {student.name
+                            {studentAnalysis.student.name
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <h3 className="font-medium">{student.name}</h3>
-                          <p className="text-sm text-gray-600">
-                            {student.email}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Última atividade: {student.lastActive}
-                          </p>
+                          <h3 className="font-medium">
+                            {studentAnalysis.student.name}
+                          </h3>
                         </div>
                       </div>
 
                       <div className="flex items-center space-x-6">
                         <div className="text-center">
                           <div className="text-lg font-bold">
-                            {student.progress}%
+                            {studentAnalysis.totalQuizzes}
                           </div>
-                          <div className="text-xs text-gray-600">Progresso</div>
-                          <Progress
-                            value={student.progress}
-                            className="w-20 h-2 mt-1"
-                          />
+                          <div className="text-xs text-gray-600">
+                            Submissoes
+                          </div>
                         </div>
 
                         <div className="text-center">
-                          <div className="text-lg font-bold">
-                            {student.quizAvg}%
+                          <div
+                            className={`text-lg font-bold ${getColorClass(
+                              studentAnalysis.percentageScore
+                            )}`}
+                          >
+                            {studentAnalysis.percentageScore}%
                           </div>
                           <div className="text-xs text-gray-600">
-                            Média de Quizzes
+                            Média de taxa de acerto
                           </div>
                         </div>
 
@@ -469,7 +552,7 @@ export default function TeacherCoursePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {course.lessons_data.map((lesson) => (
+                  {subject?.lessons?.map((lesson) => (
                     <div
                       key={lesson.id}
                       className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow"
@@ -483,31 +566,20 @@ export default function TeacherCoursePage() {
                           <div className="flex items-center space-x-4 text-sm text-gray-600">
                             <span className="flex items-center">
                               <Clock className="h-4 w-4 mr-1" />
-                              {lesson.avgTime}
-                            </span>
-                            <span className="flex items-center">
-                              <Users className="h-4 w-4 mr-1" />
-                              {Math.round(
-                                (lesson.completionRate / 100) * course.students
-                              )}{" "}
-                              concluíram
+                              {new Date(lesson.date).toLocaleDateString(
+                                "pt-BR",
+                                {
+                                  year: "numeric",
+                                  month: "2-digit",
+                                  day: "2-digit",
+                                }
+                              )}
                             </span>
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center space-x-4">
-                        <div className="text-center">
-                          <div className="text-lg font-bold">
-                            {lesson.completionRate}%
-                          </div>
-                          <div className="text-xs text-gray-600">Conclusão</div>
-                          <Progress
-                            value={lesson.completionRate}
-                            className="w-20 h-2 mt-1"
-                          />
-                        </div>
-
                         <div className="flex space-x-2">
                           <Button size="sm" variant="outline">
                             <Edit className="h-4 w-4" />
@@ -525,7 +597,7 @@ export default function TeacherCoursePage() {
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1  gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Tendências de Desempenho</CardTitle>
@@ -536,61 +608,41 @@ export default function TeacherCoursePage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span>Alunos em risco ({"<"}50% progress)</span>
+                      <span>Alunos em risco ({"<"}50% compreensao)</span>
                       <div className="flex items-center">
                         <AlertCircle className="h-4 w-4 text-red-500 mr-1" />
-                        <span className="font-bold">3 alunos</span>
+                        <span className="font-bold">{atRiskCount} alunos</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Alunos no caminho ({">"}80% progress)</span>
+                      <span>Alunos no caminho ({">"}50% compreensao)</span>
                       <div className="flex items-center">
                         <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-                        <span className="font-bold">18 students</span>
+                        <span className="font-bold">{onTrackCount} alunos</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Tempo médio por aula</span>
-                      <span className="font-bold">52 minutes</span>
+                      <span>Tempo médio por quiz</span>
+                      <span className="font-bold">
+                        {quizzesAnalysis?.avgTimeTaken}
+                      </span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span>Aula mais desafiadora</span>
-                      <span className="font-bold">Estruturas de Dados</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Estruturas de Dados</CardTitle>
-                  <CardDescription>
-                    Atividade e participação dos alunos
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Alunos ativos diariamente</span>
-                      <div className="flex items-center">
-                        <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                        <span className="font-bold">22/28</span>
-                      </div>
-                    </div>
                     <div className="flex items-center justify-between">
                       <span>Taxa de participação em quizzes</span>
                       <div className="flex items-center">
-                        <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                        <span className="font-bold">78%</span>
+                        <span className="font-bold">
+                          {((quizzesAnalysis?.totalSubmissions || 0) * 100) /
+                            ((quizzesAnalysis?.totalQuizzes || 0) *
+                              (subject?.students?.length || 0))}
+                          %
+                        </span>
                       </div>
                     </div>
+
                     <div className="flex items-center justify-between">
-                      <span>Duração média da sessão</span>
-                      <span className="font-bold">45 minutes</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Perguntas feitas esta semana</span>
-                      <span className="font-bold">12</span>
+                      <span>Quiz Mais Dificil</span>
+                      <span className="font-bold">{mostDifficultQuiz}</span>
                     </div>
                   </div>
                 </CardContent>
