@@ -13,71 +13,87 @@ import { useParams } from "next/navigation"
 
 const mockQuizData = {
   1: {
-    title: "Programming Basics Quiz",
-    description: "Test your understanding of basic programming concepts",
-    timeLimit: 30, // minutes
-    questions: [
+    id: 1,
+    title: "Basic Math Quiz",
+    maxScore: 8,
+    timeLimit: 15,
+    description: "A simple quiz to test basic math skills.",
+    lessonId: 1,
+    QuizQuestion: [
       {
         id: 1,
-        question: "What is a variable in programming?",
-        options: [
-          "A fixed value that cannot be changed",
-          "A named storage location that can hold data",
-          "A type of loop structure",
-          "A function that returns a value",
-        ],
-        correct: 1,
-        explanation:
-          "A variable is a named storage location in memory that can hold data and whose value can be changed during program execution.",
+        quizId: 1,
+        question: "What is 2 + 2?",
+        options: "[\"3\",\"4\",\"5\",\"6\"]",
+        answer: 1,
+        type: "multiple-choice",
+        explanation: "2 + 2 equals 4.",
       },
       {
         id: 2,
-        question: "Which of the following is NOT a primitive data type in most programming languages?",
-        options: ["Integer", "Boolean", "String", "Array"],
-        correct: 3,
-        explanation:
-          "Array is a composite data type, not a primitive one. Primitive data types are the basic building blocks like integers, booleans, and characters.",
+        quizId: 1,
+        question: "What is 10 - 7?",
+        options: "[\"2\",\"3\",\"4\",\"5\"]",
+        answer: 1,
+        type: "multiple-choice",
+        explanation: "10 - 7 equals 3.",
       },
       {
         id: 3,
-        question: "What does the term 'algorithm' refer to?",
-        options: [
-          "A programming language",
-          "A step-by-step procedure to solve a problem",
-          "A type of data structure",
-          "A debugging technique",
-        ],
-        correct: 1,
-        explanation:
-          "An algorithm is a finite sequence of well-defined instructions to solve a problem or perform a computation.",
+        quizId: 1,
+        question: "What is 3 x 3?",
+        options: "[\"6\",\"9\",\"12\",\"15\"]",
+        answer: 1,
+        type: "multiple-choice",
+        explanation: "3 multiplied by 3 is 9.",
       },
       {
         id: 4,
-        question: "In object-oriented programming, what is encapsulation?",
-        options: [
-          "Creating multiple instances of a class",
-          "Inheriting properties from a parent class",
-          "Bundling data and methods that operate on that data",
-          "Overriding methods in a subclass",
-        ],
-        correct: 2,
-        explanation:
-          "Encapsulation is the bundling of data and the methods that operate on that data into a single unit, typically a class.",
+        quizId: 1,
+        question: "What is 12 divided by 4?",
+        options: "[\"2\",\"3\",\"4\",\"5\"]",
+        answer: 1,
+        type: "multiple-choice",
+        explanation: "12 divided by 4 equals 3.",
       },
       {
         id: 5,
-        question: "What is the purpose of a loop in programming?",
-        options: [
-          "To store multiple values",
-          "To make decisions in code",
-          "To repeat a block of code multiple times",
-          "To define a function",
-        ],
-        correct: 2,
-        explanation: "Loops are used to execute a block of code repeatedly until a certain condition is met.",
+        quizId: 1,
+        question: "What is the square root of 16?",
+        options: "[\"2\",\"4\",\"6\",\"8\"]",
+        answer: 1,
+        type: "multiple-choice",
+        explanation: "The square root of 16 is 4.",
       },
-    ],
-  },
+      {
+        id: 6,
+        quizId: 1,
+        question: "What is 7 + 6?",
+        options: "[\"12\",\"13\",\"14\",\"15\"]",
+        answer: 1,
+        type: "multiple-choice",
+        explanation: "7 + 6 equals 13.",
+      },
+      {
+        id: 7,
+        quizId: 1,
+        question: "What is 5 x 0?",
+        options: "[\"0\",\"1\",\"5\",\"10\"]",
+        answer: 0,
+        type: "multiple-choice",
+        explanation: "Any number multiplied by 0 is 0.",
+      },
+      {
+        id: 8,
+        quizId: 1,
+        question: "What is 100 - 25?",
+        options: "[\"75\",\"85\",\"95\",\"100\"]",
+        answer: 0,
+        type: "multiple-choice",
+        explanation: "100 minus 25 is 75.",
+      }
+    ]
+  }
 }
 
 export default function QuizPage() {
@@ -118,12 +134,12 @@ export default function QuizPage() {
 
   const calculateScore = () => {
     let correct = 0
-    quiz.questions.forEach((question) => {
-      if (answers[question.id] === question.correct) {
+    quiz.QuizQuestion.forEach((question) => {
+      if (answers[question.id] === question.answer) {
         correct++
       }
     })
-    return Math.round((correct / quiz.questions.length) * 100)
+    return Math.round((correct / quiz.QuizQuestion.length) * 100)
   }
 
   const formatTime = (seconds: number) => {
@@ -135,7 +151,7 @@ export default function QuizPage() {
   if (showResults) {
     const score = calculateScore()
     return (
-      <div className="min-h-screen bg-gray-50 p-6">
+      <div className="min-h-screen w-full bg-gray-50 p-6">
         <div className="max-w-4xl mx-auto">
           <Card>
             <CardHeader className="text-center">
@@ -145,9 +161,10 @@ export default function QuizPage() {
             <CardContent className="space-y-6">
               <div className="text-center">
                 <div className="text-6xl font-bold text-green-600 mb-2">{score}%</div>
+                <div className="text-lg text-gray-600 mb-4">Tempo restante: {formatTime(timeLeft)}</div>
                 <div className="text-lg text-gray-600">
-                  Você acertou {quiz.questions.filter((q) => answers[q.id] === q.correct).length} de{" "}
-                  {quiz.questions.length} questões corretas
+                  Você acertou {quiz.QuizQuestion.filter((q) => answers[q.id] === q.answer).length} de{" "}
+                  {quiz.QuizQuestion.length} questões corretas
                 </div>
                 <Badge variant={score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive"} className="mt-2">
                   {score >= 80 ? "Excellent!" : score >= 60 ? "Good Job!" : "Needs Improvement"}
@@ -156,9 +173,9 @@ export default function QuizPage() {
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Revisão das Questões</h3>
-                {quiz.questions.map((question, index) => {
+                {quiz.QuizQuestion.map((question, index) => {
                   const userAnswer = answers[question.id]
-                  const isCorrect = userAnswer === question.correct
+                  const isCorrect = userAnswer === question.answer
 
                   return (
                     <Card
@@ -180,13 +197,13 @@ export default function QuizPage() {
                               <div className="text-gray-600">
                                 Sua resposta:{" "}
                                 <span className={isCorrect ? "text-green-600" : "text-red-600"}>
-                                  {question.options[userAnswer] || "Not answered"}
+                                  {JSON.parse(question.options)[userAnswer]}
                                 </span>
                               </div>
                               {!isCorrect && (
                                 <div className="text-gray-600">
                                   Resposta Correta:{" "}
-                                  <span className="text-green-600">{question.options[question.correct]}</span>
+                                  <span className="text-green-600">{JSON.parse(question.options)[question.answer]}</span>
                                 </div>
                               )}
                               <div className="text-gray-700 mt-2 p-2 bg-blue-50 rounded">
@@ -216,11 +233,12 @@ export default function QuizPage() {
     )
   }
 
-  const currentQ = quiz.questions[currentQuestion]
-  const progress = ((currentQuestion + 1) / quiz.questions.length) * 100
+  const currentQ = quiz.QuizQuestion[currentQuestion]
+  const progress = (Object.keys(answers).length / quiz.QuizQuestion.length) * 100
+  const options = JSON.parse(currentQ.options)
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen w-full bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
           <Link href="/student/dashboard">
@@ -248,7 +266,7 @@ export default function QuizPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>
-                Questão {currentQuestion + 1} of {quiz.questions.length}
+                Questão {currentQuestion + 1} of {quiz.QuizQuestion.length}
               </CardTitle>
               <Badge variant="outline">{Math.round(progress)}% Completo</Badge>
             </div>
@@ -261,8 +279,9 @@ export default function QuizPage() {
               <RadioGroup
                 value={answers[currentQ.id]?.toString()}
                 onValueChange={(value) => handleAnswerSelect(currentQ.id, Number.parseInt(value))}
+                key={currentQ.id}
               >
-                {currentQ.options.map((option, index) => (
+                {options.map((option: string, index: number) => (
                   <div key={index} className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-gray-50">
                     <RadioGroupItem value={index.toString()} id={`option-${index}`} />
                     <Label htmlFor={`option-${index}`} className="flex-1 cursor-pointer">
@@ -283,13 +302,13 @@ export default function QuizPage() {
                 Anterior
               </Button>
 
-              {currentQuestion === quiz.questions.length - 1 ? (
-                <Button onClick={handleSubmitQuiz} className="bg-green-600 hover:bg-green-700">
+              {currentQuestion === quiz.QuizQuestion.length - 1 ? (
+                <Button onClick={handleSubmitQuiz} className="bg-green-600 hover:bg-green-700" disabled={Object.keys(answers).length < quiz.QuizQuestion.length}>
                   Enviar Quiz
                 </Button>
               ) : (
                 <Button
-                  onClick={() => setCurrentQuestion(Math.min(quiz.questions.length - 1, currentQuestion + 1))}
+                  onClick={() => setCurrentQuestion(Math.min(quiz.QuizQuestion.length - 1, currentQuestion + 1))}
                   disabled={answers[currentQ.id] === undefined}
                 >
                   Próximo
@@ -303,27 +322,29 @@ export default function QuizPage() {
         {/* Question Navigation */}
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle>Navegação entre Questões</CardTitle>
+            <CardTitle>Questões</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-5 gap-2">
-              {quiz.questions.map((_, index) => (
-                <Button
-                  key={index}
-                  variant={
-                    currentQuestion === index
-                      ? "default"
-                      : answers[quiz.questions[index].id] !== undefined
-                        ? "secondary"
-                        : "outline"
-                  }
-                  size="sm"
-                  onClick={() => setCurrentQuestion(index)}
-                  className="aspect-square"
-                >
-                  {index + 1}
-                </Button>
-              ))}
+            <div className="flex justify-center">
+              <div className="flex flex-wrap gap-3 items-center">
+                {quiz.QuizQuestion.map((_, index) => (
+                  <Button
+                    key={index}
+                    variant={
+                      currentQuestion === index
+                        ? "default"
+                        : answers[quiz.QuizQuestion[index].id] !== undefined
+                          ? "secondary"
+                          : "outline"
+                    }
+                    size="lg"
+                    onClick={() => setCurrentQuestion(index)}
+                    className="aspect-square"
+                  >
+                    {index + 1}
+                  </Button>
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>

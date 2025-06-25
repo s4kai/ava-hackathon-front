@@ -128,7 +128,7 @@ const mockCourseData = {
     ],
     quizzes: [
       {
-        id: 3,
+        id: 1,
         title: "Advanced Concepts Quiz",
         lessons: "7-9",
         score: null,
@@ -257,7 +257,7 @@ export default function CoursePage() {
                         </AccordionTrigger>
 
                         <AccordionContent>
-                          <div className="mt-2 flex flex-col md:flex-row items-start justify-between p-4 border rounded-lg gap-4">
+                          <div className="mt-2 flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg gap-4">
                             <div className="w-full max-w-lg flex">
                               <p className="text-sm text-gray-600 break-words items-center">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
