@@ -540,10 +540,12 @@ export default function TeacherCoursePage() {
                     conclusão
                   </CardDescription>
                 </div>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Adicionar Aula
-                </Button>
+                <Link href="/teacher/lesson/create">
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Adicionar Aula
+                  </Button>
+                </Link>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
