@@ -578,9 +578,11 @@ export default function TeacherCoursePage() {
 
                       <div className="flex items-center space-x-4">
                         <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                          <Link href={`/teacher/lesson/edit/${lesson.id}`}>
+                            <Button size="sm" variant="outline">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </Link>
                           <Button size="sm" variant="outline">
                             <Trash2 className="h-4 w-4" />
                           </Button>
