@@ -30,6 +30,15 @@ interface Lesson {
   date: string;
   type: string;
   content: string;
+
+  quiz: {
+    id?: number;
+    name?: string;
+    wasTaken: boolean;
+    description?: string;
+  };
+
+  customMaterials?: CustomMaterial[];
 }
 
 interface QuizAnalysis {
@@ -79,4 +88,14 @@ interface RecentActivity {
   percentageScore: number;
   timeTaken: number;
   createdAt: string;
+}
+
+interface CustomMaterial {
+  id: number;
+  studentId: number;
+  title: string;
+  content: string;
+  lessonId: number;
+  createdAt: string;
+  updatedAt: string;
 }

@@ -153,7 +153,9 @@ export default function CoursePage() {
 
   const fetchSubject = async (id: number) => {
     try {
-      const response = await api.get(`/subjects/${id}`);
+      const response = await api.post(`/subjects/${id}`, {
+        studentId: "1",
+      });
       setSubject(response.data);
       setLoading(false);
       setSelectedLesson(subject?.lessons?.[0] || ({} as Lesson));
@@ -197,7 +199,10 @@ export default function CoursePage() {
                 Instrutor: {subject.teachers?.[0]?.name || "Desconhecido"}
               </p>
               <p className="text-gray-600 mb-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est officia in sequi, aspernatur deleniti ratione nobis illo vero a ipsam exercitationem totam ut fugiat obcaecati molestias odio ea voluptas id.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est
+                officia in sequi, aspernatur deleniti ratione nobis illo vero a
+                ipsam exercitationem totam ut fugiat obcaecati molestias odio ea
+                voluptas id.
               </p>
               <p className="text-gray-700 max-w-3xl">{subject.code}</p>
             </div>
@@ -232,9 +237,7 @@ export default function CoursePage() {
                           onClick={() => setSelectedLesson(lesson)}
                         >
                           <div>
-                            <h3 className="font-medium mb-1">
-                              {lesson.title}
-                            </h3>
+                            <h3 className="font-medium mb-1">{lesson.title}</h3>
 
                             <div className="flex items-center space-x-4 text-sm text-gray-600">
                               <span className="flex items-center">
@@ -247,9 +250,7 @@ export default function CoursePage() {
                               </span>
                               <span className="flex items-center">
                                 <Clock className="h-4 w-4 mr-1" />
-                                {new Date(
-                                  lesson.date
-                                ).toLocaleDateString() ||
+                                {new Date(lesson.date).toLocaleDateString() ||
                                   "Data não disponível"}
                               </span>
                             </div>
@@ -260,7 +261,16 @@ export default function CoursePage() {
                           <div className="mt-2 flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg gap-4">
                             <div className="w-full max-w-lg flex">
                               <p className="text-sm text-gray-600 break-words items-center">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit. Sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut
+                                enim ad minim veniam, quis nostrud exercitation
+                                ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat. Duis aute irure dolor in
+                                reprehenderit in voluptate velit esse cillum
+                                dolore eu fugiat nulla pariatur. Excepteur sint
+                                occaecat cupidatat non proident, sunt in culpa
+                                qui officia deserunt mollit anim id est laborum.
                               </p>
                             </div>
 
@@ -279,48 +289,55 @@ export default function CoursePage() {
 
                         <AccordionContent className="overflow-auto transition-all duration-300">
                           <div className="space-y-4">
-                            {course.quizzes.map((quiz) => (
+                            {lesson.quiz.name !== undefined && (
                               <div
-                                key={quiz.id}
+                                key={lesson.quiz.id}
                                 className="flex items-center justify-between p-4 border rounded-lg"
                               >
                                 <div className="flex items-center space-x-3">
                                   <HelpCircle className="h-5 w-5 text-blue-600" />
                                   <div>
-                                    <h3 className="font-medium">{quiz.title}</h3>
+                                    <h3 className="font-medium">
+                                      {lesson.quiz.name}
+                                    </h3>
                                     <p className="text-sm text-gray-600">
-                                      Cobre as aulas {quiz.lessons}
+                                      {lesson.quiz.description ||
+                                        "Nenhuma descrição disponível"}
                                     </p>
                                   </div>
                                 </div>
 
                                 <div className="flex items-center space-x-3">
-                                  {quiz.completed && quiz.score && (
-                                    <Badge
-                                      variant={
-                                        quiz.score >= 80 ? "default" : "secondary"
-                                      }
-                                    >
-                                      Pontuação: {quiz.score}%
+                                  {lesson.quiz.wasTaken && (
+                                    <Badge variant={"default"}>
+                                      Pontuação: %
                                     </Badge>
                                   )}
-                                  <Link href={`/student/quiz/${quiz.id}`}>
+                                  <Link
+                                    href={`/student/quiz/${lesson.quiz.id}`}
+                                  >
                                     <Button
                                       size="sm"
-                                      variant={quiz.completed ? "outline" : "default"}
+                                      variant={
+                                        lesson.quiz.wasTaken
+                                          ? "outline"
+                                          : "default"
+                                      }
                                     >
-                                      {quiz.completed ? "Retake" : "Start Quiz"}
+                                      {lesson.quiz.wasTaken
+                                        ? "Retake"
+                                        : "Start Quiz"}
                                     </Button>
                                   </Link>
                                 </div>
                               </div>
-                            ))}
+                            )}
                           </div>
                         </AccordionContent>
 
                         <AccordionContent className="overflow-auto transition-all duration-300">
                           <div className="space-y-3">
-                            {course.materials.map((material) => (
+                            {lesson.customMaterials?.map((material) => (
                               <div
                                 key={material.id}
                                 className="flex items-center justify-between p-4 border rounded-lg"
@@ -328,9 +345,11 @@ export default function CoursePage() {
                                 <div className="flex items-center space-x-3">
                                   <FileText className="h-5 w-5 text-gray-600" />
                                   <div>
-                                    <h3 className="font-medium">{material.title}</h3>
+                                    <h3 className="font-medium">
+                                      {material.title}
+                                    </h3>
                                     <p className="text-sm text-gray-600">
-                                      {material.type.toUpperCase()} • {material.size}
+                                      {material.title.toUpperCase()} • 30
                                     </p>
                                   </div>
                                 </div>
