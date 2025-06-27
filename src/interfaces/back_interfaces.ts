@@ -54,6 +54,16 @@ interface QuizzesAnalysis {
   avgTimeTaken: number;
 }
 
+interface Question {
+  id: number;
+  quizId?: number;
+  question: string;
+  type: "multiple-choice" | "true-false" | "short-answer";
+  options: string[];
+  correctAnswer?: number;
+  explanation?: string;
+}
+
 interface StudentAnalysis {
   studentId: number;
   student: Student;
