@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { api } from "@/lib/api";
 import {
   ArrowLeft,
   CheckCircle,
@@ -34,19 +35,10 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 
-interface Question {
-  id: number;
-  question: string;
-  type: "multiple-choice" | "true-false" | "short-answer";
-  options?: string[];
-  correct?: number | string;
-  explanation?: string;
-}
-
 export default function CreateQuizPage() {
   const [quizTitle, setQuizTitle] = useState("");
   const [quizDescription, setQuizDescription] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [timeLimit, setTimeLimit] = useState("30");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -55,7 +47,7 @@ export default function CreateQuizPage() {
   const [aiQuestionCount, setAiQuestionCount] = useState("5");
   const [isPreview, setIsPreview] = useState(false);
 
-  const courses = [
+  const lessons = [
     { id: 1, title: "Introduction to Computer Science" },
     { id: 2, title: "Web Development Fundamentals" },
     { id: 3, title: "Database Management Systems" },
@@ -69,7 +61,7 @@ export default function CreateQuizPage() {
       question: "",
       type: "multiple-choice",
       options: ["", "", "", ""],
-      correct: 0,
+      correctAnswer: 0,
       explanation: "",
     };
     setQuestions([...questions, newQuestion]);
@@ -116,14 +108,29 @@ export default function CreateQuizPage() {
     }
   };
 
-  const saveQuiz = () => {
-    console.log("Saving quiz:", {
-      title: quizTitle,
-      description: quizDescription,
-      course: selectedCourse,
-      timeLimit,
-      questions,
-    });
+  const saveQuiz = async () => {
+    try {
+      const res = await api.post(
+        "quizzes/create",
+        {
+          title: quizTitle,
+          description: quizDescription,
+          lessonId: 2,
+          timeLimit: Number.parseInt(timeLimit),
+          questions,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await res.data;
+      console.log("Quiz saved successfully:", data);
+    } catch (error) {
+      console.error("Error saving quiz:", error);
+    }
   };
 
   return (
@@ -175,20 +182,17 @@ export default function CreateQuizPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="course-select">Materia</Label>
-                  <Select
-                    value={selectedCourse}
-                    onValueChange={setSelectedCourse}
-                  >
+                  <Select value={selectedLesson?.title}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a course" />
+                      <SelectValue placeholder="Select a lesson" />
                     </SelectTrigger>
                     <SelectContent>
-                      {courses.map((course) => (
+                      {lessons.map((lesson) => (
                         <SelectItem
-                          key={course.id}
-                          value={course.id.toString()}
+                          key={lesson.id}
+                          value={lesson.id.toString()}
                         >
-                          {course.title}
+                          {lesson.title}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -337,11 +341,15 @@ export default function CreateQuizPage() {
                                   {question.options && (
                                     <div className="space-y-1 text-sm">
                                       {question.options.map(
-                                        (option, optionIndex) => (
+                                        (
+                                          option: string,
+                                          optionIndex: number
+                                        ) => (
                                           <div
                                             key={optionIndex}
                                             className={`flex items-center ${
-                                              question.correct === optionIndex
+                                              question.correctAnswer ===
+                                              optionIndex
                                                 ? "text-green-600 font-medium"
                                                 : "text-gray-600"
                                             }`}
@@ -353,7 +361,7 @@ export default function CreateQuizPage() {
                                               .
                                             </span>
                                             {option}
-                                            {question.correct ===
+                                            {question.correctAnswer ===
                                               optionIndex && (
                                               <CheckCircle className="h-4 w-4 ml-2" />
                                             )}
@@ -455,17 +463,17 @@ export default function CreateQuizPage() {
                             <div className="space-y-2">
                               <Label>Opções de Resposta</Label>
                               <RadioGroup
-                                value={question.correct?.toString()}
+                                value={question.correctAnswer?.toString()}
                                 onValueChange={(value) =>
                                   updateQuestion(
                                     question.id,
-                                    "correct",
+                                    "correctAnswer",
                                     Number.parseInt(value)
                                   )
                                 }
                               >
-                                {question.options?.map(
-                                  (option, optionIndex) => (
+                                {question.options.map(
+                                  (option: string, optionIndex: number) => (
                                     <div
                                       key={optionIndex}
                                       className="flex items-center space-x-2"
@@ -497,7 +505,8 @@ export default function CreateQuizPage() {
                                         htmlFor={`q${question.id}-option${optionIndex}`}
                                         className="text-sm text-gray-500"
                                       >
-                                        {question.correct === optionIndex && (
+                                        {question.correctAnswer ===
+                                          optionIndex && (
                                           <CheckCircle className="h-4 w-4 text-green-500" />
                                         )}
                                       </Label>
@@ -512,9 +521,13 @@ export default function CreateQuizPage() {
                             <div className="space-y-2">
                               <Label>Resposta Correta</Label>
                               <RadioGroup
-                                value={question.correct?.toString()}
+                                value={question.correctAnswer?.toString()}
                                 onValueChange={(value) =>
-                                  updateQuestion(question.id, "correct", value)
+                                  updateQuestion(
+                                    question.id,
+                                    "correctAnswer",
+                                    value
+                                  )
                                 }
                               >
                                 <div className="flex items-center space-x-2">
