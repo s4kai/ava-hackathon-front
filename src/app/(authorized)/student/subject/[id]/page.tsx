@@ -40,8 +40,10 @@ export default function CoursePage() {
 
   const fetchSubject = async (id: number) => {
     try {
-      const response = await api.post(`/subjects/${id}`, {
-        studentId: "1",
+      const response = await api.get(`/subjects/${id}`, {
+        data: {
+          studentId: 1, // Assuming a static student ID for now
+        },
       });
       setSubject(response.data);
       setLoading(false);

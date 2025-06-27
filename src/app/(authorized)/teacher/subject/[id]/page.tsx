@@ -30,159 +30,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const mockCourseData = {
-  1: {
-    title: "Introduction to Computer Science",
-    description:
-      "A comprehensive introduction to computer science fundamentals",
-    students: 28,
-    lessons: 12,
-    avgProgress: 75,
-    lessons_data: [
-      {
-        id: 1,
-        title: "Introduction to Programming",
-        completionRate: 100,
-        avgTime: "45 min",
-      },
-      {
-        id: 2,
-        title: "Variables and Data Types",
-        completionRate: 96,
-        avgTime: "38 min",
-      },
-      {
-        id: 3,
-        title: "Control Structures",
-        completionRate: 89,
-        avgTime: "52 min",
-      },
-      {
-        id: 4,
-        title: "Functions and Methods",
-        completionRate: 82,
-        avgTime: "48 min",
-      },
-      {
-        id: 5,
-        title: "Arrays and Lists",
-        completionRate: 75,
-        avgTime: "55 min",
-      },
-      {
-        id: 6,
-        title: "Object-Oriented Programming",
-        completionRate: 68,
-        avgTime: "62 min",
-      },
-      {
-        id: 7,
-        title: "Inheritance and Polymorphism",
-        completionRate: 61,
-        avgTime: "58 min",
-      },
-      {
-        id: 8,
-        title: "Exception Handling",
-        completionRate: 54,
-        avgTime: "45 min",
-      },
-      {
-        id: 9,
-        title: "File I/O Operations",
-        completionRate: 46,
-        avgTime: "50 min",
-      },
-      {
-        id: 10,
-        title: "Data Structures",
-        completionRate: 32,
-        avgTime: "65 min",
-      },
-      {
-        id: 11,
-        title: "Algorithms and Complexity",
-        completionRate: 18,
-        avgTime: "70 min",
-      },
-      { id: 12, title: "Final Project", completionRate: 7, avgTime: "120 min" },
-    ],
-    students_data: [
-      {
-        id: 1,
-        name: "Alice Johnson",
-        email: "alice@example.com",
-        progress: 92,
-        lastActive: "2 hours ago",
-        quizAvg: 88,
-      },
-      {
-        id: 2,
-        name: "Bob Smith",
-        email: "bob@example.com",
-        progress: 85,
-        lastActive: "1 day ago",
-        quizAvg: 82,
-      },
-      {
-        id: 3,
-        name: "Carol Davis",
-        email: "carol@example.com",
-        progress: 78,
-        lastActive: "3 hours ago",
-        quizAvg: 91,
-      },
-      {
-        id: 4,
-        name: "David Wilson",
-        email: "david@example.com",
-        progress: 65,
-        lastActive: "2 days ago",
-        quizAvg: 76,
-      },
-      {
-        id: 5,
-        name: "Emma Brown",
-        email: "emma@example.com",
-        progress: 88,
-        lastActive: "5 hours ago",
-        quizAvg: 85,
-      },
-      {
-        id: 6,
-        name: "Frank Miller",
-        email: "frank@example.com",
-        progress: 42,
-        lastActive: "1 week ago",
-        quizAvg: 68,
-      },
-    ],
-    quizzes: [
-      {
-        id: 1,
-        title: "Programming Basics Quiz",
-        avgScore: 85,
-        completions: 26,
-        created: "2024-01-10",
-      },
-      {
-        id: 2,
-        title: "Functions and OOP Quiz",
-        avgScore: 78,
-        completions: 22,
-        created: "2024-01-15",
-      },
-      {
-        id: 3,
-        title: "Advanced Concepts Quiz",
-        avgScore: 72,
-        completions: 15,
-        created: "2024-01-20",
-      },
-    ],
-  },
-};
-
 export default function TeacherCoursePage() {
   const params = useParams();
   const courseId = Number.parseInt(params.id as string);
@@ -336,7 +183,9 @@ export default function TeacherCoursePage() {
                         Média de Quizzes
                       </p>
                       <p className="text-2xl font-bold text-gray-900">
-                        {quizzesAnalysis?.averagePercentageScore || 0}%
+                        {quizzesAnalysis?.averagePercentageScore.toFixed(2) ||
+                          0}
+                        %
                       </p>
                     </div>
                   </div>
@@ -402,7 +251,8 @@ export default function TeacherCoursePage() {
                             {recentActivity.studentName}
                           </p>
                           <p className="text-sm text-gray-600">
-                            Taxa de Acerto: {recentActivity.percentageScore}%
+                            Taxa de Acerto:{" "}
+                            {recentActivity.percentageScore.toFixed(2)}%
                           </p>
                         </div>
                       </div>
@@ -446,7 +296,7 @@ export default function TeacherCoursePage() {
                       </div>
                       <div className="text-right">
                         <div className="text-lg font-bold text-green-600">
-                          {quiz.percentageScore}%
+                          {quiz.percentageScore.toFixed(2)}%
                         </div>
                         <p className="text-xs text-gray-500">
                           Dificuldade:{" "}
@@ -507,7 +357,7 @@ export default function TeacherCoursePage() {
                               studentAnalysis.percentageScore
                             )}`}
                           >
-                            {studentAnalysis.percentageScore | 0}%
+                            {(studentAnalysis.percentageScore | 0).toFixed(2)}%
                           </div>
                           <div className="text-xs text-gray-600">
                             Média de taxa de acerto
