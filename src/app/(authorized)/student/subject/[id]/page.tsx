@@ -30,117 +30,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const mockCourseData = {
-  1: {
-    title: "Introduction to Computer Science",
-    instructor: "Dr. Sarah Johnson",
-    description:
-      "A comprehensive introduction to computer science fundamentals, covering programming concepts, data structures, and algorithms.",
-    progress: 75,
-    totalLessons: 12,
-    completedLessons: 9,
-    lessons: [
-      {
-        id: 1,
-        title: "Introduction to Programming",
-        type: "video",
-        duration: "45 min",
-        completed: true,
-      },
-      {
-        id: 2,
-        title: "Variables and Data Types",
-        type: "video",
-        duration: "30 min",
-        completed: true,
-      },
-      {
-        id: 3,
-        title: "Control Structures",
-        type: "video",
-        duration: "40 min",
-        completed: true,
-      },
-      {
-        id: 4,
-        title: "Functions and Methods",
-        type: "video",
-        duration: "35 min",
-        completed: true,
-      },
-      {
-        id: 5,
-        title: "Arrays and Lists",
-        type: "video",
-        duration: "50 min",
-        completed: true,
-      },
-      {
-        id: 6,
-        title: "Object-Oriented Programming",
-        type: "video",
-        duration: "60 min",
-        completed: true,
-      },
-      {
-        id: 7,
-        title: "Inheritance and Polymorphism",
-        type: "video",
-        duration: "45 min",
-        completed: true,
-      },
-      {
-        id: 8,
-        title: "Exception Handling",
-        type: "video",
-        duration: "30 min",
-        completed: true,
-      },
-      {
-        id: 9,
-        title: "File I/O Operations",
-        type: "video",
-        duration: "40 min",
-        completed: true,
-      },
-      {
-        id: 10,
-        title: "Data Structures",
-        type: "video",
-        duration: "55 min",
-        completed: false,
-        current: true,
-      },
-      {
-        id: 11,
-        title: "Algorithms and Complexity",
-        type: "video",
-        duration: "50 min",
-        completed: false,
-      },
-      {
-        id: 12,
-        title: "Final Project",
-        type: "assignment",
-        duration: "2 hours",
-        completed: false,
-      },
-    ],
-    quizzes: [
-      {
-        id: 1,
-        title: "Advanced Concepts Quiz",
-        lessons: "7-9",
-        score: null,
-        completed: false,
-      },
-    ],
-    materials: [
-      { id: 1, title: "Course Syllabus", type: "pdf", size: "2.3 MB" },
-    ],
-  },
-};
-
 export default function CoursePage() {
   const params = useParams();
   const courseId = Number.parseInt(params.id as string);
@@ -148,8 +37,6 @@ export default function CoursePage() {
   const [subject, setSubject] = useState<Subject | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<Lesson>({} as Lesson);
   const [loading, setLoading] = useState(true);
-
-  const course = mockCourseData[1];
 
   const fetchSubject = async (id: number) => {
     try {
@@ -198,12 +85,7 @@ export default function CoursePage() {
               <p className="text-gray-600 mb-4">
                 Instrutor: {subject.teachers?.[0]?.name || "Desconhecido"}
               </p>
-              <p className="text-gray-600 mb-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est
-                officia in sequi, aspernatur deleniti ratione nobis illo vero a
-                ipsam exercitationem totam ut fugiat obcaecati molestias odio ea
-                voluptas id.
-              </p>
+              <p className="text-gray-600 mb-4"></p>
               <p className="text-gray-700 max-w-3xl">{subject.code}</p>
             </div>
           </div>
@@ -261,16 +143,8 @@ export default function CoursePage() {
                           <div className="mt-2 flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg gap-4">
                             <div className="w-full max-w-lg flex">
                               <p className="text-sm text-gray-600 break-words items-center">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut
-                                enim ad minim veniam, quis nostrud exercitation
-                                ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat. Duis aute irure dolor in
-                                reprehenderit in voluptate velit esse cillum
-                                dolore eu fugiat nulla pariatur. Excepteur sint
-                                occaecat cupidatat non proident, sunt in culpa
-                                qui officia deserunt mollit anim id est laborum.
+                                {lesson.description ||
+                                  "Nenhuma descrição disponível"}
                               </p>
                             </div>
 
