@@ -138,7 +138,7 @@ export default function TeacherCoursePage() {
               </div>
             </div>
             <div className="flex space-x-3">
-              <Link href="/teacher/quiz/create">
+              <Link href={`/teacher/quiz/create?subjectId=${courseId}`}>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
                   Criar Quiz
@@ -390,7 +390,7 @@ export default function TeacherCoursePage() {
                     conclusão
                   </CardDescription>
                 </div>
-                <Link href="/teacher/lesson/create">
+                <Link href={`/teacher/lesson/create?subjectId=${courseId}`}>
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />
                     Adicionar Aula
@@ -399,14 +399,14 @@ export default function TeacherCoursePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {subject?.lessons?.map((lesson) => (
+                  {subject?.lessons?.map((lesson, index) => (
                     <div
                       key={lesson.id}
                       className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center space-x-4">
                         <div className="text-lg font-bold text-gray-400">
-                          #{lesson.id}
+                          #{index + 1}
                         </div>
                         <div>
                           <h3 className="font-medium">{lesson.title}</h3>
@@ -423,19 +423,6 @@ export default function TeacherCoursePage() {
                               )}
                             </span>
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-4">
-                        <div className="flex space-x-2">
-                          <Link href={`/teacher/lesson/edit/${lesson.id}`}>
-                            <Button size="sm" variant="outline">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </Link>
-                          <Button size="sm" variant="outline">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
                         </div>
                       </div>
                     </div>
