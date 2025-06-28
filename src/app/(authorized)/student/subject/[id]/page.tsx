@@ -121,7 +121,9 @@ export default function CoursePage() {
                           onClick={() => setSelectedLesson(lesson)}
                         >
                           <div>
-                            <h3 className="font-medium mb-1">{lesson.title}</h3>
+                            <h3 className="font-medium mb-1 text-start">
+                              {lesson.title}
+                            </h3>
 
                             <div className="flex items-center space-x-4 text-sm text-gray-600">
                               <span className="flex items-center">

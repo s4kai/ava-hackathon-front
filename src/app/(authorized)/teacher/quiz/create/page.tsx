@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingComponent } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,25 +34,24 @@ import {
   Wand2,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function CreateQuizPage() {
+  const searchParams = useSearchParams();
+  const subjectId = searchParams.get("subjectId");
+
   const [quizTitle, setQuizTitle] = useState("");
   const [quizDescription, setQuizDescription] = useState("");
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
   const [timeLimit, setTimeLimit] = useState("30");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [aiTopic, setAiTopic] = useState("");
   const [aiDifficulty, setAiDifficulty] = useState("");
   const [aiQuestionCount, setAiQuestionCount] = useState("5");
   const [isPreview, setIsPreview] = useState(false);
-
-  const lessons = [
-    { id: 1, title: "Introduction to Computer Science" },
-    { id: 2, title: "Web Development Fundamentals" },
-    { id: 3, title: "Database Management Systems" },
-  ];
+  const [loading, setLoading] = useState(true);
 
   const addQuestion = () => {
     setIsPreview(false);
@@ -78,7 +78,7 @@ export default function CreateQuizPage() {
   };
 
   const generateAIQuiz = async () => {
-    if (!aiTopic || !aiDifficulty) return;
+    if (!aiDifficulty) return;
 
     setIsGenerating(true);
 
@@ -89,7 +89,6 @@ export default function CreateQuizPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          topic: aiTopic,
           difficulty: aiDifficulty,
           questionCount: Number.parseInt(aiQuestionCount),
         }),
@@ -132,6 +131,26 @@ export default function CreateQuizPage() {
       console.error("Error saving quiz:", error);
     }
   };
+
+  const fetchData = async (subjectId: string | null) => {
+    if (!subjectId) return;
+    try {
+      const res = await api.get(`/lessons/without-quiz/${subjectId}`);
+      setLessons(res.data);
+    } catch (error) {
+      console.error("Error fetching lessons:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(subjectId);
+  }, [subjectId]);
+
+  if (loading) {
+    <LoadingComponent />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 w-full">
@@ -235,17 +254,7 @@ export default function CreateQuizPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="ai-topic">Tópico</Label>
-                  <Input
-                    id="ai-topic"
-                    placeholder="e.g., JavaScript fundamentals"
-                    value={aiTopic}
-                    onChange={(e) => setAiTopic(e.target.value)}
-                  />
-                </div>
-
+              <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="ai-count">Número de Perguntas</Label>
                   <Select
@@ -267,7 +276,7 @@ export default function CreateQuizPage() {
 
               <Button
                 onClick={generateAIQuiz}
-                disabled={!aiTopic || !aiDifficulty || isGenerating}
+                disabled={!aiDifficulty || isGenerating}
                 className="w-full"
               >
                 {isGenerating ? (
