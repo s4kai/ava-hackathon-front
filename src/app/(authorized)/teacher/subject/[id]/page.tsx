@@ -28,49 +28,73 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function TeacherCoursePage() {
   const params = useParams();
-  const courseId = Number.parseInt(params.id as string);
+  const courseId = Number(params.id);
 
   const [subject, setSubject] = useState<Subject | null>(null);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
-
   const [quizzesAnalysis, setQuizzesAnalysis] =
     useState<QuizzesAnalysis | null>(null);
-
   const [studentsAnalysis, setStudentsAnalysis] =
     useState<StudentsAnalysis | null>(null);
-
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async (id: number) => {
+  // Fetch all data in parallel
+  const fetchData = useCallback(async (id: number) => {
+    setLoading(true);
     try {
-      const subjectData = await api.post(`/subjects/${id}`);
-      setSubject(subjectData.data);
+      const [subjectRes, quizzesRes, studentsRes, recentRes] =
+        await Promise.all([
+          api.post(`/subjects/${id}`),
+          api.get(`/subjects/${id}/quiz-analysis`),
+          api.get(`/subjects/${id}/students-quiz-analytics`),
+          api.get(`/subjects/${id}/recent-activity`),
+        ]);
 
-      const quizData = await api.get(`/subjects/${id}/quiz-analysis`);
-      setQuizzesAnalysis(quizData.data);
-
-      const studentAnalysis = await api.get(
-        `/subjects/${id}/students-quiz-analytics`
-      );
-      setStudentsAnalysis(studentAnalysis.data);
-
-      const recentActivityData = await api.get(
-        `/subjects/${id}/recent-activity`
-      );
-      setRecentActivity(recentActivityData.data);
-
-      setLoading(false);
+      setSubject(subjectRes.data);
+      setQuizzesAnalysis(quizzesRes.data);
+      setStudentsAnalysis(studentsRes.data);
+      setRecentActivity(recentRes.data);
     } catch (error) {
-      setLoading(false);
+      console.error("Erro ao buscar dados do curso:", error);
       setSubject(null);
       setQuizzesAnalysis(null);
-      console.error("Erro ao buscar dados do curso:", error);
+      setStudentsAnalysis(null);
+      setRecentActivity([]);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!Number.isNaN(courseId)) {
+      fetchData(courseId);
+    }
+  }, [courseId, fetchData]);
+
+  const atRiskCount = useMemo(() => {
+    return (
+      studentsAnalysis?.students.filter((s) => s.percentageScore < 50).length ??
+      0
+    );
+  }, [studentsAnalysis]);
+
+  const onTrackCount = useMemo(() => {
+    return (
+      studentsAnalysis?.students.filter((s) => s.percentageScore >= 50)
+        .length ?? 0
+    );
+  }, [studentsAnalysis]);
+
+  const mostDifficultQuiz = useMemo(() => {
+    if (!quizzesAnalysis?.quizzes?.length) return "Nenhum Quiz Disponível";
+    return quizzesAnalysis.quizzes.reduce((prev, current) =>
+      prev.percentageScore < current.percentageScore ? prev : current
+    ).title;
+  }, [quizzesAnalysis]);
 
   useEffect(() => {
     fetchData(courseId);
@@ -92,21 +116,15 @@ export default function TeacherCoursePage() {
     return "text-red-600";
   };
 
-  const atRiskCount =
-    studentsAnalysis?.students.filter((s) => s.percentageScore < 50).length ||
-    0;
-
-  const onTrackCount =
-    studentsAnalysis?.students.filter((s) => s.percentageScore >= 50).length ||
-    0;
-
-  const mostDifficultQuiz = quizzesAnalysis?.quizzes?.length
-    ? quizzesAnalysis.quizzes.reduce(
-        (prev, current) =>
-          prev.percentageScore > current.percentageScore ? prev : current,
-        quizzesAnalysis.quizzes[0]
-      ).title
-    : "Nenhum Quiz Disponível";
+  function calculateSubmissionRate(
+    totalSubmissions: number,
+    totalQuizzes: number,
+    totalStudents: number
+  ): string {
+    if (totalQuizzes === 0 || totalStudents === 0) return "0%";
+    const rate = (totalSubmissions * 100) / (totalQuizzes * totalStudents);
+    return `${rate.toFixed(2)}%`;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 w-full">
@@ -295,7 +313,11 @@ export default function TeacherCoursePage() {
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="text-lg font-bold text-green-600">
+                        <div
+                          className={`text-lg font-bold ${getColorClass(
+                            quiz.percentageScore
+                          )}`}
+                        >
                           {quiz.percentageScore.toFixed(2)}%
                         </div>
                         <p className="text-xs text-gray-500">
@@ -468,10 +490,11 @@ export default function TeacherCoursePage() {
                       <span>Taxa de participação em quizzes</span>
                       <div className="flex items-center">
                         <span className="font-bold">
-                          {((quizzesAnalysis?.totalSubmissions || 0) * 100) /
-                            ((quizzesAnalysis?.totalQuizzes || 0) *
-                              (subject?.students?.length || 0)) || 0}
-                          %
+                          {calculateSubmissionRate(
+                            quizzesAnalysis?.totalSubmissions ?? 0,
+                            quizzesAnalysis?.totalQuizzes ?? 0,
+                            subject?.students?.length ?? 0
+                          )}
                         </span>
                       </div>
                     </div>
