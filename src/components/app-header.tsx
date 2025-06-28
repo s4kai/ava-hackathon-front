@@ -29,18 +29,8 @@ import { useState } from "react";
 import Image from "next/image";
 import logo from "@/public/images/logo-text_temp.png"
 
-const navigationItems = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "Sobre", href: "/about", icon: Info },
-  { name: "Serviços", href: "/services", icon: Briefcase },
-  { name: "Contatos", href: "/contact", icon: Mail },
-];
-
-const currentRoute = "/";
-
 export const AppHeader = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+ 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
       <div className="container mx-auto max-w-7xl px-6">
@@ -54,25 +44,6 @@ export const AppHeader = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
-            {navigationItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = currentRoute === item.href;
-
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors text-primary-foreground hover:bg-accent ${
-                    isActive
-                      ? "bg-accent text-primary font-semibold"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
           </nav>
 
           {/* Right Section - User Menu & Mobile Toggle */}
@@ -125,48 +96,6 @@ export const AppHeader = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* Mobile Menu Toggle */}
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" className="md:hidden" size="icon">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Alternar menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <nav className="flex flex-col space-y-4 mt-4">
-                  {navigationItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = currentRoute === item.href;
-
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                          isActive
-                            ? "bg-accent text-foreground font-semibold"
-                            : "text-muted-foreground"
-                        }`}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <Icon className="h-5 w-5" />
-                        <span>{item.name}</span>
-                      </Link>
-                    );
-                  })}
-
-                  {/* Mobile Search */}
-                  <div className="pt-4 border-t">
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Search className="mr-3 h-5 w-5" />
-                      Pesquisar
-                    </Button>
-                  </div>
-                </nav>
-              </SheetContent>
-            </Sheet>
           </div>
         </div>
       </div>
