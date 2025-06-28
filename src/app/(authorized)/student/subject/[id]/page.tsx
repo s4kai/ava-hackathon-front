@@ -186,7 +186,7 @@ export default function CoursePage() {
                                 <div className="flex items-center space-x-3">
                                   {lesson.quiz.wasTaken ? (
                                     <Badge variant={"default"}>
-                                      Pontuação: %
+                                      Pontuação: {lesson.quiz.percentage || 0} %
                                     </Badge>
                                   ) : (
                                     <Link

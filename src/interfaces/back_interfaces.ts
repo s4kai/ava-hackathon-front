@@ -36,6 +36,7 @@ interface Lesson {
     name?: string;
     wasTaken: boolean;
     description?: string;
+    percentage?: number;
   };
 
   customMaterials?: CustomMaterial[];
