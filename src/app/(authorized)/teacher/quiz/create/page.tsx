@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api";
+import { AxiosResponse } from "axios";
 import {
   ArrowLeft,
   CheckCircle,
@@ -42,8 +43,11 @@ export default function CreateQuizPage() {
   const [timeLimit, setTimeLimit] = useState("30");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+<<<<<<< Updated upstream
   const [aiTopic, setAiTopic] = useState("");
   const [aiDifficulty, setAiDifficulty] = useState("");
+=======
+>>>>>>> Stashed changes
   const [aiQuestionCount, setAiQuestionCount] = useState("5");
   const [isPreview, setIsPreview] = useState(false);
 
@@ -78,6 +82,7 @@ export default function CreateQuizPage() {
   };
 
   const generateAIQuiz = async () => {
+<<<<<<< Updated upstream
     if (!aiTopic || !aiDifficulty) return;
 
     setIsGenerating(true);
@@ -94,12 +99,20 @@ export default function CreateQuizPage() {
           questionCount: Number.parseInt(aiQuestionCount),
         }),
       });
+=======
+    setIsGenerating(true);
 
-      if (response.ok) {
-        const data = await response.json();
-        setQuestions(data.questions);
-        setQuizTitle(data.title);
-        setQuizDescription(data.description);
+    try {
+      const response: AxiosResponse<Question[]> = await api.get(
+        `/quizzes/generate-questions/${selectedLesson?.id}`
+      );
+>>>>>>> Stashed changes
+
+      if (response.status === 200) {
+        const data = await response.data;
+        data.forEach((question) => {
+          setQuestions((prevQuestions) => [...prevQuestions, question]);
+        });
       }
     } catch (error) {
       console.error("Error generating quiz:", error);
@@ -115,7 +128,7 @@ export default function CreateQuizPage() {
         {
           title: quizTitle,
           description: quizDescription,
-          lessonId: 2,
+          lessonId: selectedLesson?.id,
           timeLimit: Number.parseInt(timeLimit),
           questions,
         },
@@ -182,7 +195,16 @@ export default function CreateQuizPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="course-select">Materia</Label>
-                  <Select value={selectedLesson?.title}>
+                  <Select
+                    value={selectedLesson?.id.toString()}
+                    onValueChange={(value) =>
+                      setSelectedLesson(
+                        lessons.find(
+                          (lesson) => lesson.id.toString() === value
+                        ) || null
+                      )
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a lesson" />
                     </SelectTrigger>
@@ -267,7 +289,11 @@ export default function CreateQuizPage() {
 
               <Button
                 onClick={generateAIQuiz}
+<<<<<<< Updated upstream
                 disabled={!aiTopic || !aiDifficulty || isGenerating}
+=======
+                disabled={isGenerating || selectedLesson === null}
+>>>>>>> Stashed changes
                 className="w-full"
               >
                 {isGenerating ? (
