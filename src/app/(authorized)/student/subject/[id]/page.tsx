@@ -40,10 +40,8 @@ export default function CoursePage() {
 
   const fetchSubject = async (id: number) => {
     try {
-      const response = await api.get(`/subjects/${id}`, {
-        data: {
-          studentId: 1, // Assuming a static student ID for now
-        },
+      const response = await api.post(`/subjects/${id}`, {
+        studentId: "1", // Assuming a static student ID for now
       });
       setSubject(response.data);
       setLoading(false);
@@ -222,10 +220,14 @@ export default function CoursePage() {
                                   </div>
                                 </div>
 
-                                <Button size="sm" variant="outline">
-                                  <Download className="h-4 w-4 mr-2" />
-                                  Download
-                                </Button>
+                                <Link
+                                  href={`/student/custom-material/${material.id}`}
+                                >
+                                  <Button size="sm" variant="outline">
+                                    <Download className="h-4 w-4 mr-2" />
+                                    Ver
+                                  </Button>
+                                </Link>
                               </div>
                             ))}
                           </div>

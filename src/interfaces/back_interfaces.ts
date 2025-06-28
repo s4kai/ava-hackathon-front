@@ -121,4 +121,5 @@ interface CustomMaterial {
   lessonId: number;
   createdAt: string;
   updatedAt: string;
+  subject: number;
 }

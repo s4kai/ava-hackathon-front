@@ -47,7 +47,7 @@ export default function TeacherCoursePage() {
 
   const fetchData = async (id: number) => {
     try {
-      const subjectData = await api.get(`/subjects/${id}`);
+      const subjectData = await api.post(`/subjects/${id}`);
       setSubject(subjectData.data);
 
       const quizData = await api.get(`/subjects/${id}/quiz-analysis`);
