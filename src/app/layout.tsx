@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "@mdxeditor/editor/style.css";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title:
@@ -26,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className="flex min-h-screen flex-col bg-gray-50">{children}</body>
+      <body className="flex min-h-screen flex-col bg-gray-50">
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

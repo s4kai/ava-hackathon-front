@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function QuizPage() {
   const params = useParams();
@@ -111,6 +112,13 @@ export default function QuizPage() {
           answer,
         })),
       });
+
+      toast.success(
+        "Quiz enviado com sucesso, seu material customizado esta sendo gerado",
+        {
+          duration: 3000,
+        }
+      );
 
       setCustomMaterialCompleted(true);
       setCustomMaterialId(quizSubmitResult.data.customMaterialId);

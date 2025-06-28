@@ -37,6 +37,7 @@ import {
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function CreateQuizPage() {
   const searchParams = useSearchParams();
@@ -116,8 +117,11 @@ export default function CreateQuizPage() {
       );
 
       const data = await res.data;
+
+      toast.success("Quiz criado com sucesso", { duration: 3000 });
       console.log("Quiz saved successfully:", data);
     } catch (error) {
+      toast.error("Erro ao criar quiz");
       console.error("Error saving quiz:", error);
     }
   };

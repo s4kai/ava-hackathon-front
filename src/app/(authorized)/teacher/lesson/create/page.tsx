@@ -33,6 +33,7 @@ import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { LoadingComponent } from "@/components/loading";
+import { toast } from "sonner";
 
 interface ContentBlock {
   id: number;
@@ -109,12 +110,12 @@ export default function CreateLessonPage() {
       api
         .post(`subjects/${subject.id}/lessons/create`, lessonData)
         .then(() => {
-          alert("Lesson saved successfully!");
+          toast.success("Evento criado com sucesso", { duration: 3000 });
           router.push(`/teacher/subject/${subject.id}`);
         })
         .catch((error) => {
           console.error("Error saving lesson:", error);
-          alert("Error saving lesson");
+          toast.error("Erro ao criar evento", { duration: 3000 });
         });
     }
   };
