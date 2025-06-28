@@ -40,9 +40,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export default function CreateQuizPage() {
-  const searchParams = useSearchParams();
-  const subjectId = searchParams.get("subjectId");
+interface CreateQuizPageProps {
+  subjectId: string | null;
+}
+
+export default function CreateQuizPage({ subjectId }: CreateQuizPageProps) {
   const router = useRouter();
 
   const [quizTitle, setQuizTitle] = useState("");

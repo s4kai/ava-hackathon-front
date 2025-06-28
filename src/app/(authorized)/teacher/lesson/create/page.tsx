@@ -30,7 +30,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import NextLink from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { LoadingComponent } from "@/components/loading";
 import { toast } from "sonner";
@@ -44,10 +44,13 @@ interface ContentBlock {
   duration?: string;
 }
 
-export default function CreateLessonPage() {
+interface PageProps {
+  searchParams: { subjectId?: string };
+}
+
+export default function Page({ searchParams }: PageProps) {
+  const subjectId = searchParams.subjectId ?? null;
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const subjectId = searchParams.get("subjectId");
 
   const [lessonTitle, setLessonTitle] = useState("");
   const [lessonDescription, setLessonDescription] = useState("");
