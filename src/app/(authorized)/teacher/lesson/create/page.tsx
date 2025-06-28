@@ -122,7 +122,7 @@ export default function CreateLessonPage() {
   const fetchData = async (subjectId: string | null) => {
     if (!subjectId) return;
     try {
-      const res = await api.get(`/subjects/${subjectId}`);
+      const res = await api.post(`/subjects/${subjectId}`);
       setSubject(res.data);
     } catch (error) {
       throw new Error("Error fetching subject data");
