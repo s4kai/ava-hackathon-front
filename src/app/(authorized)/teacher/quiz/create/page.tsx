@@ -36,12 +36,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function CreateQuizPage() {
   const searchParams = useSearchParams();
   const subjectId = searchParams.get("subjectId");
+  const router = useRouter();
 
   const [quizTitle, setQuizTitle] = useState("");
   const [quizDescription, setQuizDescription] = useState("");
@@ -120,6 +122,7 @@ export default function CreateQuizPage() {
 
       toast.success("Quiz criado com sucesso", { duration: 3000 });
       console.log("Quiz saved successfully:", data);
+      router.push(`/teacher/subject/${subjectId}`);
     } catch (error) {
       toast.error("Erro ao criar quiz");
       console.error("Error saving quiz:", error);
@@ -194,7 +197,7 @@ export default function CreateQuizPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="course-select">Materia</Label>
+                  <Label htmlFor="course-select">Aula</Label>
                   <Select
                     value={selectedLesson?.id.toString()}
                     onValueChange={(value) =>

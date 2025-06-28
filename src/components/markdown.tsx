@@ -41,7 +41,7 @@ const Markdown: FC<EditorProps> = ({ markdown, editorRef }) => (
       tablePlugin(),
       thematicBreakPlugin(),
       frontmatterPlugin(),
-      codeBlockPlugin({ defaultCodeBlockLanguage: "txt" }),
+      codeBlockPlugin(),
       codeMirrorPlugin({
         codeBlockLanguages: {
           js: "JavaScript",

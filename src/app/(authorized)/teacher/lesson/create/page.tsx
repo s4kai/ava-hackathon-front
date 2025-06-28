@@ -307,8 +307,7 @@ export default function CreateLessonPage() {
                           )}
                           <CardTitle className="text-lg">
                             {block.type.charAt(0).toUpperCase() +
-                              block.type.slice(1)}{" "}
-                            Block {index + 1}
+                              block.type.slice(1)}
                           </CardTitle>
                         </div>
                         <Button
