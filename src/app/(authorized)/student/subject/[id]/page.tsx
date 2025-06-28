@@ -186,27 +186,17 @@ export default function CoursePage() {
                                 </div>
 
                                 <div className="flex items-center space-x-3">
-                                  {lesson.quiz.wasTaken && (
+                                  {lesson.quiz.wasTaken ? (
                                     <Badge variant={"default"}>
                                       Pontuação: %
                                     </Badge>
-                                  )}
-                                  <Link
-                                    href={`/student/quiz/${lesson.quiz.id}`}
-                                  >
-                                    <Button
-                                      size="sm"
-                                      variant={
-                                        lesson.quiz.wasTaken
-                                          ? "outline"
-                                          : "default"
-                                      }
+                                  ) : (
+                                    <Link
+                                      href={`/student/quiz/${lesson.quiz.id}`}
                                     >
-                                      {lesson.quiz.wasTaken
-                                        ? "Retake"
-                                        : "Start Quiz"}
-                                    </Button>
-                                  </Link>
+                                      <Button size="sm">Iniciar Quiz</Button>
+                                    </Link>
+                                  )}
                                 </div>
                               </div>
                             )}

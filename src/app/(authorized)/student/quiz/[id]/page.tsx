@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingComponent } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,127 +13,83 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { api } from "@/lib/api";
 import {
   ArrowLeft,
   ArrowRight,
   CheckCircle,
   Clock,
+  Loader,
   XCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const mockQuizData = {
-  1: {
-    id: 1,
-    title: "Basic Math Quiz",
-    maxScore: 8,
-    timeLimit: 15,
-    description: "A simple quiz to test basic math skills.",
-    lessonId: 1,
-    QuizQuestion: [
-      {
-        id: 1,
-        quizId: 1,
-        question: "What is 2 + 2?",
-        options: '["3","4","5","6"]',
-        answer: 1,
-        type: "multiple-choice",
-        explanation: "2 + 2 equals 4.",
-      },
-      {
-        id: 2,
-        quizId: 1,
-        question: "What is 10 - 7?",
-        options: '["2","3","4","5"]',
-        answer: 1,
-        type: "multiple-choice",
-        explanation: "10 - 7 equals 3.",
-      },
-      {
-        id: 3,
-        quizId: 1,
-        question: "What is 3 x 3?",
-        options: '["6","9","12","15"]',
-        answer: 1,
-        type: "multiple-choice",
-        explanation: "3 multiplied by 3 is 9.",
-      },
-      {
-        id: 4,
-        quizId: 1,
-        question: "What is 12 divided by 4?",
-        options: '["2","3","4","5"]',
-        answer: 1,
-        type: "multiple-choice",
-        explanation: "12 divided by 4 equals 3.",
-      },
-      {
-        id: 5,
-        quizId: 1,
-        question: "What is the square root of 16?",
-        options: '["2","4","6","8"]',
-        answer: 1,
-        type: "multiple-choice",
-        explanation: "The square root of 16 is 4.",
-      },
-      {
-        id: 6,
-        quizId: 1,
-        question: "What is 7 + 6?",
-        options: '["12","13","14","15"]',
-        answer: 1,
-        type: "multiple-choice",
-        explanation: "7 + 6 equals 13.",
-      },
-      {
-        id: 7,
-        quizId: 1,
-        question: "What is 5 x 0?",
-        options: '["0","1","5","10"]',
-        answer: 0,
-        type: "multiple-choice",
-        explanation: "Any number multiplied by 0 is 0.",
-      },
-      {
-        id: 8,
-        quizId: 1,
-        question: "What is 100 - 25?",
-        options: '["75","85","95","100"]',
-        answer: 0,
-        type: "multiple-choice",
-        explanation: "100 minus 25 is 75.",
-      },
-    ],
-  },
-};
-
 export default function QuizPage() {
   const params = useParams();
   const quizId = Number.parseInt(params.id as string);
-  const quiz = mockQuizData[quizId as keyof typeof mockQuizData];
 
+  const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<{ [key: number]: number }>({});
-  const [timeLeft, setTimeLeft] = useState(
-    quiz?.timeLimit ? quiz.timeLimit * 60 : 1800
-  ); // in seconds
+  const [timeLeft, setTimeLeft] = useState(1800); // default 30min
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showResults, setShowResults] = useState(false);
 
+  const [currentQ, setCurrentQ] = useState<Question | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [options, setOptions] = useState<string[]>([]);
+
+  const [customMaterialCompleted, setCustomMaterialCompleted] = useState(false);
+  const [customMaterialId, setCustomMaterialId] = useState<number | null>(null);
+
+  // Carrega o quiz
+  useEffect(() => {
+    const fetchQuizData = async () => {
+      try {
+        const response = await api.get(`/quizzes/${quizId}`);
+        setQuiz(response.data);
+        setLoading(false);
+
+        const initialTime = response.data?.timeLimit
+          ? response.data.timeLimit * 60
+          : 1800;
+
+        setTimeLeft(initialTime);
+      } catch (error) {
+        console.error("Erro ao buscar quiz:", error);
+        setLoading(false);
+      }
+    };
+
+    if (quizId) fetchQuizData();
+  }, [quizId]);
+
+  // Atualiza a questão atual e progresso
+  useEffect(() => {
+    if (quiz && quiz.QuizQuestion?.length > 0) {
+      const q = quiz.QuizQuestion[currentQuestion];
+      const opts = JSON.parse(q.options as string);
+      const answered = Object.keys(answers).length;
+      const prog = (answered / quiz.QuizQuestion.length) * 100;
+
+      setCurrentQ(q);
+      setOptions(opts);
+      setProgress(prog);
+    }
+  }, [quiz, currentQuestion, answers]);
+
+  // Timer
   useEffect(() => {
     if (timeLeft > 0 && !quizCompleted) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
+    } else if (timeLeft === 0 && !quizCompleted) {
       handleSubmitQuiz();
     }
   }, [timeLeft, quizCompleted]);
-
-  if (!quiz) {
-    return <div>Quiz não encontrado</div>;
-  }
 
   const handleAnswerSelect = (questionId: number, answerIndex: number) => {
     setAnswers((prev) => ({
@@ -141,18 +98,34 @@ export default function QuizPage() {
     }));
   };
 
-  const handleSubmitQuiz = () => {
+  const handleSubmitQuiz = async () => {
     setQuizCompleted(true);
     setShowResults(true);
+    // Save the quiz results
+    try {
+      const quizSubmitResult = await api.post(`/quizzes/submit`, {
+        quizId: quiz?.id,
+        studentId: 1, // Replace with actual student ID
+        answers: Object.entries(answers).map(([questionId, answer]) => ({
+          questionId: Number(questionId),
+          answer,
+        })),
+      });
+
+      setCustomMaterialCompleted(true);
+      setCustomMaterialId(quizSubmitResult.data.customMaterialId);
+    } catch (error) {
+      console.error("Erro ao enviar quiz:", error);
+    }
   };
 
   const calculateScore = () => {
-    let correct = 0;
-    quiz.QuizQuestion.forEach((question) => {
-      if (answers[question.id] === question.answer) {
-        correct++;
-      }
-    });
+    if (!quiz) return 0;
+
+    const correct = quiz.QuizQuestion.filter(
+      (q) => answers[q.id] === q.answer
+    ).length;
+
     return Math.round((correct / quiz.QuizQuestion.length) * 100);
   };
 
@@ -161,6 +134,16 @@ export default function QuizPage() {
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
+
+  if (!quiz) {
+    return (
+      <div className="p-6 text-center text-red-500">Quiz não encontrado.</div>
+    );
+  }
 
   if (showResults) {
     const score = calculateScore();
@@ -186,7 +169,7 @@ export default function QuizPage() {
                     quiz.QuizQuestion.filter((q) => answers[q.id] === q.answer)
                       .length
                   }{" "}
-                  de {quiz.QuizQuestion.length} questões corretas
+                  de {quiz.QuizQuestion.length} questões
                 </div>
                 <Badge
                   variant={
@@ -199,18 +182,20 @@ export default function QuizPage() {
                   className="mt-2"
                 >
                   {score >= 80
-                    ? "Excellent!"
+                    ? "Excelente!"
                     : score >= 60
-                    ? "Good Job!"
-                    : "Needs Improvement"}
+                    ? "Bom trabalho!"
+                    : "Precisa melhorar"}
                 </Badge>
               </div>
 
+              {/* Revisão das questões */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Revisão das Questões</h3>
                 {quiz.QuizQuestion.map((question, index) => {
                   const userAnswer = answers[question.id];
                   const isCorrect = userAnswer === question.answer;
+                  const opts = JSON.parse(question.options as string);
 
                   return (
                     <Card
@@ -240,18 +225,14 @@ export default function QuizPage() {
                                       : "text-red-600"
                                   }
                                 >
-                                  {JSON.parse(question.options)[userAnswer]}
+                                  {opts[userAnswer]}
                                 </span>
                               </div>
                               {!isCorrect && (
                                 <div className="text-gray-600">
-                                  Resposta Correta:{" "}
+                                  Resposta correta:{" "}
                                   <span className="text-green-600">
-                                    {
-                                      JSON.parse(question.options)[
-                                        question.answer
-                                      ]
-                                    }
+                                    {opts[question.answer as number]}
                                   </span>
                                 </div>
                               )}
@@ -272,11 +253,20 @@ export default function QuizPage() {
                 <Link href="/student/dashboard">
                   <Button>Voltar ao Painel</Button>
                 </Link>
-                <Button
-                  variant="outline"
-                  onClick={() => window.location.reload()}
-                >
-                  Refazer Quiz
+                <Button variant="outline" disabled={!customMaterialCompleted}>
+                  {customMaterialCompleted ? (
+                    <Link
+                      href={`/student/custom-material/${customMaterialId}`}
+                      className="flex items-center"
+                    >
+                      Material Customizado Gerado
+                    </Link>
+                  ) : (
+                    <>
+                      Seu material personalizado esta sendo gerado{" "}
+                      <Loader className="animate-spin h-4 w-4 mr-2" />
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -285,11 +275,6 @@ export default function QuizPage() {
       </div>
     );
   }
-
-  const currentQ = quiz.QuizQuestion[currentQuestion];
-  const progress =
-    (Object.keys(answers).length / quiz.QuizQuestion.length) * 100;
-  const options = JSON.parse(currentQ.options);
 
   return (
     <div className="min-h-screen w-full bg-gray-50 p-6">
@@ -307,22 +292,19 @@ export default function QuizPage() {
               <h1 className="text-2xl font-bold text-gray-900">{quiz.title}</h1>
               <p className="text-gray-600">{quiz.description}</p>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center text-orange-600">
-                <Clock className="h-5 w-5 mr-1" />
-                <span className="font-mono text-lg">
-                  {formatTime(timeLeft)}
-                </span>
-              </div>
+            <div className="flex items-center space-x-4 text-orange-600">
+              <Clock className="h-5 w-5 mr-1" />
+              <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
             </div>
           </div>
         </div>
 
+        {/* QUESTÃO ATUAL */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>
-                Questão {currentQuestion + 1} of {quiz.QuizQuestion.length}
+                Questão {currentQuestion + 1} de {quiz.QuizQuestion.length}
               </CardTitle>
               <Badge variant="outline">{Math.round(progress)}% Completo</Badge>
             </div>
@@ -330,16 +312,16 @@ export default function QuizPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <h2 className="text-xl font-medium mb-4">{currentQ.question}</h2>
+              <h2 className="text-xl font-medium mb-4">{currentQ?.question}</h2>
 
               <RadioGroup
-                value={answers[currentQ.id]?.toString()}
+                value={answers[currentQ?.id || 0]?.toString()}
                 onValueChange={(value) =>
-                  handleAnswerSelect(currentQ.id, Number.parseInt(value))
+                  handleAnswerSelect(currentQ!.id, parseInt(value))
                 }
-                key={currentQ.id}
+                key={currentQ?.id}
               >
-                {options.map((option: string, index: number) => (
+                {options.map((option, index) => (
                   <div
                     key={index}
                     className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-gray-50"
@@ -391,7 +373,7 @@ export default function QuizPage() {
                       )
                     )
                   }
-                  disabled={answers[currentQ.id] === undefined}
+                  disabled={!currentQ || answers[currentQ.id] === undefined}
                 >
                   Próximo
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -401,32 +383,30 @@ export default function QuizPage() {
           </CardContent>
         </Card>
 
-        {/* Question Navigation */}
+        {/* Navegação por questões */}
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle>Questões</CardTitle>
+            <CardTitle>Navegar pelas Questões</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex justify-center">
-              <div className="flex flex-wrap gap-3 items-center">
-                {quiz.QuizQuestion.map((_, index) => (
-                  <Button
-                    key={index}
-                    variant={
-                      currentQuestion === index
-                        ? "default"
-                        : answers[quiz.QuizQuestion[index].id] !== undefined
-                        ? "muted"
-                        : "outline"
-                    }
-                    size="icon"
-                    onClick={() => setCurrentQuestion(index)}
-                    className="w-16"
-                  >
-                    {index + 1}
-                  </Button>
-                ))}
-              </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {quiz.QuizQuestion.map((q, index) => (
+                <Button
+                  key={q.id}
+                  variant={
+                    currentQuestion === index
+                      ? "default"
+                      : answers[q.id] !== undefined
+                      ? "muted"
+                      : "outline"
+                  }
+                  size="icon"
+                  onClick={() => setCurrentQuestion(index)}
+                  className="w-16"
+                >
+                  {index + 1}
+                </Button>
+              ))}
             </div>
           </CardContent>
         </Card>

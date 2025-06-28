@@ -63,12 +63,25 @@ interface QuizzesAnalysis {
   avgTimeTaken: number;
 }
 
+interface Quiz {
+  id: number;
+  title: string;
+  description?: string;
+  maxScore: number;
+  timeLimit: number;
+  lessonId: number;
+  QuizQuestion: Question[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface Question {
   id: number;
   quizId?: number;
   question: string;
   type: "multiple-choice" | "true-false" | "short-answer";
-  options: string[];
+  options: string[] | string;
+  answer?: number; // Index of the correct answer in options array
   correctAnswer?: number;
   explanation?: string;
 }

@@ -348,7 +348,7 @@ export default function CreateQuizPage() {
                                   </h4>
                                   {question.options && (
                                     <div className="space-y-1 text-sm">
-                                      {question.options.map(
+                                      {(question.options as string[]).map(
                                         (
                                           option: string,
                                           optionIndex: number
@@ -480,7 +480,7 @@ export default function CreateQuizPage() {
                                   )
                                 }
                               >
-                                {question.options.map(
+                                {(question.options as string[]).map(
                                   (option: string, optionIndex: number) => (
                                     <div
                                       key={optionIndex}
