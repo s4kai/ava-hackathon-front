@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <>
       <AppHeader />
-      {children}
+      <div className="flex-1 flex  justify-center"> {children}</div>
     </>
   );
 }

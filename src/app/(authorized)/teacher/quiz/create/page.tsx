@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingComponent } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { api } from "@/lib/api";
+import { AxiosResponse } from "axios";
 import {
   ArrowLeft,
   CheckCircle,
@@ -32,34 +35,26 @@ import {
   Wand2,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-
-interface Question {
-  id: number;
-  question: string;
-  type: "multiple-choice" | "true-false" | "short-answer";
-  options?: string[];
-  correct?: number | string;
-  explanation?: string;
-}
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function CreateQuizPage() {
+  const searchParams = useSearchParams();
+  const subjectId = searchParams.get("subjectId");
+  const router = useRouter();
+
   const [quizTitle, setQuizTitle] = useState("");
   const [quizDescription, setQuizDescription] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
   const [timeLimit, setTimeLimit] = useState("30");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [aiTopic, setAiTopic] = useState("");
-  const [aiDifficulty, setAiDifficulty] = useState("");
   const [aiQuestionCount, setAiQuestionCount] = useState("5");
   const [isPreview, setIsPreview] = useState(false);
-
-  const courses = [
-    { id: 1, title: "Introduction to Computer Science" },
-    { id: 2, title: "Web Development Fundamentals" },
-    { id: 3, title: "Database Management Systems" },
-  ];
+  const [loading, setLoading] = useState(true);
 
   const addQuestion = () => {
     setIsPreview(false);
@@ -69,7 +64,7 @@ export default function CreateQuizPage() {
       question: "",
       type: "multiple-choice",
       options: ["", "", "", ""],
-      correct: 0,
+      correctAnswer: 0,
       explanation: "",
     };
     setQuestions([...questions, newQuestion]);
@@ -86,28 +81,17 @@ export default function CreateQuizPage() {
   };
 
   const generateAIQuiz = async () => {
-    if (!aiTopic || !aiDifficulty) return;
-
     setIsGenerating(true);
-
     try {
-      const response = await fetch("/api/quiz/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          topic: aiTopic,
-          difficulty: aiDifficulty,
-          questionCount: Number.parseInt(aiQuestionCount),
-        }),
-      });
+      const response: AxiosResponse<Question[]> = await api.get(
+        `/quizzes/generate-questions/${selectedLesson?.id}`
+      );
 
-      if (response.ok) {
-        const data = await response.json();
-        setQuestions(data.questions);
-        setQuizTitle(data.title);
-        setQuizDescription(data.description);
+      if (response.status === 200) {
+        const data = await response.data;
+        data.forEach((question) => {
+          setQuestions((prevQuestions) => [...prevQuestions, question]);
+        });
       }
     } catch (error) {
       console.error("Error generating quiz:", error);
@@ -116,42 +100,77 @@ export default function CreateQuizPage() {
     }
   };
 
-  const saveQuiz = () => {
-    // In a real app, this would save to a database
-    console.log("Saving quiz:", {
-      title: quizTitle,
-      description: quizDescription,
-      course: selectedCourse,
-      timeLimit,
-      questions,
-    });
-    alert("Quiz saved successfully!");
+  const saveQuiz = async () => {
+    try {
+      const res = await api.post(
+        "quizzes/create",
+        {
+          title: quizTitle,
+          description: quizDescription,
+          lessonId: selectedLesson?.id,
+          timeLimit: Number.parseInt(timeLimit),
+          questions,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await res.data;
+
+      toast.success("Quiz criado com sucesso", { duration: 3000 });
+      console.log("Quiz saved successfully:", data);
+      router.push(`/teacher/subject/${subjectId}`);
+    } catch (error) {
+      toast.error("Erro ao criar quiz");
+      console.error("Error saving quiz:", error);
+    }
   };
 
+  const fetchData = async (subjectId: string | null) => {
+    if (!subjectId) return;
+    try {
+      const res = await api.get(`/lessons/without-quiz/${subjectId}`);
+      setLessons(res.data);
+    } catch (error) {
+      console.error("Error fetching lessons:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(subjectId);
+  }, [subjectId]);
+
+  if (loading) {
+    <LoadingComponent />;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 w-full">
       <div className="max-w-6xl mx-auto">
         <div className="mb-6">
           <Link href="/teacher/dashboard">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
+              Voltar ao Painel
             </Button>
           </Link>
 
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Create New Quiz
+                Criar Novo Quiz
               </h1>
-              <p className="text-gray-600">
-                Design assessments for your students
-              </p>
+              <p className="text-gray-600">Crie avaliações para seus alunos</p>
             </div>
             <div className="flex space-x-3">
               <Button onClick={saveQuiz}>
                 <Save className="h-4 w-4 mr-2" />
-                Save Quiz
+                Salvar Quiz
               </Button>
             </div>
           </div>
@@ -160,15 +179,15 @@ export default function CreateQuizPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Quiz Settings</CardTitle>
+              <CardTitle>Configurações do Quiz</CardTitle>
               <CardDescription>
-                Configure basic quiz information
+                Configure as informações básicas do quiz
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="quiz-title">Quiz Title</Label>
+                  <Label htmlFor="quiz-title">Título do Quiz</Label>
                   <Input
                     id="quiz-title"
                     placeholder="Enter quiz title"
@@ -178,21 +197,27 @@ export default function CreateQuizPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="course-select">Course</Label>
+                  <Label htmlFor="course-select">Aula</Label>
                   <Select
-                    value={selectedCourse}
-                    onValueChange={setSelectedCourse}
+                    value={selectedLesson?.id.toString()}
+                    onValueChange={(value) =>
+                      setSelectedLesson(
+                        lessons.find(
+                          (lesson) => lesson.id.toString() === value
+                        ) || null
+                      )
+                    }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a course" />
+                      <SelectValue placeholder="Select a lesson" />
                     </SelectTrigger>
                     <SelectContent>
-                      {courses.map((course) => (
+                      {lessons.map((lesson) => (
                         <SelectItem
-                          key={course.id}
-                          value={course.id.toString()}
+                          key={lesson.id}
+                          value={lesson.id.toString()}
                         >
-                          {course.title}
+                          {lesson.title}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -201,7 +226,7 @@ export default function CreateQuizPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="quiz-description">Description</Label>
+                <Label htmlFor="quiz-description">Descrição</Label>
                 <Textarea
                   id="quiz-description"
                   placeholder="Enter quiz description"
@@ -211,7 +236,7 @@ export default function CreateQuizPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="time-limit">Time Limit (minutes)</Label>
+                <Label htmlFor="time-limit">Tempo Limite (minutos)</Label>
                 <Input
                   id="time-limit"
                   type="number"
@@ -227,41 +252,17 @@ export default function CreateQuizPage() {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Wand2 className="h-5 w-5 mr-2" />
-                AI Quiz Generation
+                Geração de Quiz por IA
               </CardTitle>
               <CardDescription>
-                Generate quiz questions automatically using AI based on your
-                topic and requirements
+                Gere perguntas de quiz automaticamente usando IA com base no seu
+                tópico e requisitos
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="ai-topic">Topic</Label>
-                  <Input
-                    id="ai-topic"
-                    placeholder="e.g., JavaScript fundamentals"
-                    value={aiTopic}
-                    onChange={(e) => setAiTopic(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="ai-difficulty">Difficulty Level</Label>
-                  <Select value={aiDifficulty} onValueChange={setAiDifficulty}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select difficulty" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="beginner">Beginner</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="ai-count">Number of Questions</Label>
+                  <Label htmlFor="ai-count">Número de Perguntas</Label>
                   <Select
                     value={aiQuestionCount}
                     onValueChange={setAiQuestionCount}
@@ -270,10 +271,10 @@ export default function CreateQuizPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="5">5 Questions</SelectItem>
-                      <SelectItem value="10">10 Questions</SelectItem>
-                      <SelectItem value="15">15 Questions</SelectItem>
-                      <SelectItem value="20">20 Questions</SelectItem>
+                      <SelectItem value="5">5 Perguntas</SelectItem>
+                      <SelectItem value="10">10 Perguntas</SelectItem>
+                      <SelectItem value="15">15 Perguntas</SelectItem>
+                      <SelectItem value="20">20 Perguntas</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -281,18 +282,18 @@ export default function CreateQuizPage() {
 
               <Button
                 onClick={generateAIQuiz}
-                disabled={!aiTopic || !aiDifficulty || isGenerating}
+                disabled={isGenerating || selectedLesson === null}
                 className="w-full"
               >
                 {isGenerating ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Generating Quiz...
+                    Gerando Quiz...
                   </>
                 ) : (
                   <>
                     <Wand2 className="h-4 w-4 mr-2" />
-                    Generate Quiz with AI
+                    Gerar Quiz com IA
                   </>
                 )}
               </Button>
@@ -302,9 +303,9 @@ export default function CreateQuizPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Questions</CardTitle>
+                <CardTitle>Perguntas</CardTitle>
                 <CardDescription>
-                  Add and configure quiz questions
+                  Adicione e configure as perguntas do quiz
                 </CardDescription>
               </div>
               <div className="flex items-center space-x-2">
@@ -317,12 +318,12 @@ export default function CreateQuizPage() {
                   ) : (
                     <EyeClosed className="h-4 w-4 mr-2" />
                   )}
-                  Preview
+                  Pré-visualizar
                 </Button>
 
                 <Button onClick={addQuestion}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Question
+                  Adicionar Pergunta
                 </Button>
               </div>
             </CardHeader>
@@ -333,10 +334,10 @@ export default function CreateQuizPage() {
                     <div className="mt-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold">
-                          Generated Questions
+                          Perguntas Geradas
                         </h3>
                         <Badge variant="secondary">
-                          {questions.length} questions
+                          {questions.length} perguntas
                         </Badge>
                       </div>
 
@@ -350,16 +351,20 @@ export default function CreateQuizPage() {
                               <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                   <h4 className="font-medium mb-2">
-                                    Question {index + 1}: {question.question}
+                                    Pergunta {index + 1}: {question.question}
                                   </h4>
                                   {question.options && (
                                     <div className="space-y-1 text-sm">
-                                      {question.options.map(
-                                        (option, optionIndex) => (
+                                      {(question.options as string[]).map(
+                                        (
+                                          option: string,
+                                          optionIndex: number
+                                        ) => (
                                           <div
                                             key={optionIndex}
                                             className={`flex items-center ${
-                                              question.correct === optionIndex
+                                              question.correctAnswer ===
+                                              optionIndex
                                                 ? "text-green-600 font-medium"
                                                 : "text-gray-600"
                                             }`}
@@ -371,7 +376,7 @@ export default function CreateQuizPage() {
                                               .
                                             </span>
                                             {option}
-                                            {question.correct ===
+                                            {question.correctAnswer ===
                                               optionIndex && (
                                               <CheckCircle className="h-4 w-4 ml-2" />
                                             )}
@@ -382,7 +387,7 @@ export default function CreateQuizPage() {
                                   )}
                                   {question.explanation && (
                                     <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
-                                      <strong>Explanation:</strong>{" "}
+                                      <strong>Explicação:</strong>{" "}
                                       {question.explanation}
                                     </div>
                                   )}
@@ -407,8 +412,8 @@ export default function CreateQuizPage() {
                 <>
                   {questions.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
-                      No questions added yet. Click "Add Question" to get
-                      started.
+                      Nenhuma pergunta adicionada ainda. Clique em "Adicionar
+                      Pergunta" para começar.
                     </div>
                   ) : (
                     questions.map((question, index) => (
@@ -418,7 +423,7 @@ export default function CreateQuizPage() {
                       >
                         <CardHeader className="flex flex-row items-center justify-between">
                           <CardTitle className="text-lg">
-                            Question {index + 1}
+                            Pergunta {index + 1}
                           </CardTitle>
                           <Button
                             variant="outline"
@@ -430,7 +435,7 @@ export default function CreateQuizPage() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <div className="space-y-2">
-                            <Label>Question Type</Label>
+                            <Label>Tipo de Pergunta</Label>
                             <Select
                               value={question.type}
                               onValueChange={(value) =>
@@ -442,20 +447,20 @@ export default function CreateQuizPage() {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="multiple-choice">
-                                  Multiple Choice
+                                  Múltipla Escolha
                                 </SelectItem>
                                 <SelectItem value="true-false">
-                                  True/False
+                                  Verdadeiro/Falso
                                 </SelectItem>
                                 <SelectItem value="short-answer">
-                                  Short Answer
+                                  Resposta Curta
                                 </SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
 
                           <div className="space-y-2">
-                            <Label>Question</Label>
+                            <Label>Pergunta</Label>
                             <Textarea
                               placeholder="Enter your question"
                               value={question.question}
@@ -471,19 +476,19 @@ export default function CreateQuizPage() {
 
                           {question.type === "multiple-choice" && (
                             <div className="space-y-2">
-                              <Label>Answer Options</Label>
+                              <Label>Opções de Resposta</Label>
                               <RadioGroup
-                                value={question.correct?.toString()}
+                                value={question.correctAnswer?.toString()}
                                 onValueChange={(value) =>
                                   updateQuestion(
                                     question.id,
-                                    "correct",
+                                    "correctAnswer",
                                     Number.parseInt(value)
                                   )
                                 }
                               >
-                                {question.options?.map(
-                                  (option, optionIndex) => (
+                                {(question.options as string[]).map(
+                                  (option: string, optionIndex: number) => (
                                     <div
                                       key={optionIndex}
                                       className="flex items-center space-x-2"
@@ -515,7 +520,8 @@ export default function CreateQuizPage() {
                                         htmlFor={`q${question.id}-option${optionIndex}`}
                                         className="text-sm text-gray-500"
                                       >
-                                        {question.correct === optionIndex && (
+                                        {question.correctAnswer ===
+                                          optionIndex && (
                                           <CheckCircle className="h-4 w-4 text-green-500" />
                                         )}
                                       </Label>
@@ -528,11 +534,15 @@ export default function CreateQuizPage() {
 
                           {question.type === "true-false" && (
                             <div className="space-y-2">
-                              <Label>Correct Answer</Label>
+                              <Label>Resposta Correta</Label>
                               <RadioGroup
-                                value={question.correct?.toString()}
+                                value={question.correctAnswer?.toString()}
                                 onValueChange={(value) =>
-                                  updateQuestion(question.id, "correct", value)
+                                  updateQuestion(
+                                    question.id,
+                                    "correctAnswer",
+                                    value
+                                  )
                                 }
                               >
                                 <div className="flex items-center space-x-2">
@@ -541,7 +551,7 @@ export default function CreateQuizPage() {
                                     id={`q${question.id}-true`}
                                   />
                                   <Label htmlFor={`q${question.id}-true`}>
-                                    True
+                                    Verdadeiro
                                   </Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
@@ -550,7 +560,7 @@ export default function CreateQuizPage() {
                                     id={`q${question.id}-false`}
                                   />
                                   <Label htmlFor={`q${question.id}-false`}>
-                                    False
+                                    Falso
                                   </Label>
                                 </div>
                               </RadioGroup>
@@ -558,7 +568,7 @@ export default function CreateQuizPage() {
                           )}
 
                           <div className="space-y-2">
-                            <Label>Explanation (Optional)</Label>
+                            <Label>Explicação (Opcional)</Label>
                             <Textarea
                               placeholder="Explain the correct answer"
                               value={question.explanation}

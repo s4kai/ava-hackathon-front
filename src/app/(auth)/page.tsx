@@ -11,9 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GraduationCap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+import Image from "next/image";
+import logo from "@/public/images/logo.png"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,12 +29,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <GraduationCap className="h-12 w-12 text-blue-600 mr-2" />
-            <h1 className="text-4xl font-bold text-gray-900">EduFlow LMS</h1>
+            <Image src={logo}  width={100} height={100} alt="Logo" />
+            <h1 className="text-4xl font-bold text-primary-foreground">Acad<span className="text-primary">IA</span></h1>
           </div>
         </div>
 
@@ -40,14 +42,14 @@ export default function LoginPage() {
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
             <CardDescription>
-              Choose your role and sign in to continue
+              Escolha seu perfil e faça login para continuar
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="student" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="student">Student</TabsTrigger>
-                <TabsTrigger value="teacher">Teacher</TabsTrigger>
+                <TabsTrigger value="student">Aluno</TabsTrigger>
+                <TabsTrigger value="teacher">Professor</TabsTrigger>
               </TabsList>
 
               <TabsContent value="student" className="space-y-4">
@@ -56,17 +58,17 @@ export default function LoginPage() {
                   <Input
                     id="student-email"
                     type="email"
-                    placeholder="student@example.com"
+                    placeholder="estudante@exemplo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="student-password">Password</Label>
+                  <Label htmlFor="student-password">Senha</Label>
                   <Input
                     id="student-password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="Insira sua senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -75,7 +77,7 @@ export default function LoginPage() {
                   className="w-full"
                   onClick={() => handleLogin("student")}
                 >
-                  Sign In as Student
+                  Entrar como Aluno
                 </Button>
               </TabsContent>
 
@@ -85,17 +87,17 @@ export default function LoginPage() {
                   <Input
                     id="teacher-email"
                     type="email"
-                    placeholder="teacher@example.com"
+                    placeholder="professor@exemplo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="teacher-password">Password</Label>
+                  <Label htmlFor="teacher-password">Senha</Label>
                   <Input
                     id="teacher-password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="Insira sua senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -104,7 +106,7 @@ export default function LoginPage() {
                   className="w-full"
                   onClick={() => handleLogin("teacher")}
                 >
-                  Sign In as Teacher
+                  Entrar como Professor
                 </Button>
               </TabsContent>
             </Tabs>
