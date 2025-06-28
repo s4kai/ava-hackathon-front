@@ -30,6 +30,15 @@ interface Lesson {
   date: string;
   type: string;
   content: string;
+  subjectId: number;
+
+  lessonPlan?: {
+    id?: number;
+    title: string;
+    content: string;
+    createdAt?: string;
+    updatedAt?: string;
+  };
 
   quiz: {
     id?: number;

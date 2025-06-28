@@ -151,14 +151,18 @@ export default function CoursePage() {
                             </div>
 
                             <div className="w-full md:w-auto mt-2 md:mt-0 flex justify-end">
-                              <Button
-                                variant="outline"
-                                className="whitespace-nowrap"
-                                onClick={() => setSelectedLesson(lesson)}
+                              <Link
+                                href={`/student/lesson/${lesson.id}`}
+                                className="w-full md:w-auto"
                               >
-                                <Book className="h-4 w-4 mr-2" />
-                                Ver Conteúdo
-                              </Button>
+                                <Button
+                                  variant="outline"
+                                  className="whitespace-nowrap"
+                                >
+                                  <Book className="h-4 w-4 mr-2" />
+                                  Ver Conteúdo
+                                </Button>
+                              </Link>
                             </div>
                           </div>
                         </AccordionContent>
@@ -265,10 +269,12 @@ export default function CoursePage() {
                       </div>
                     </div>
 
-                    <Button className="w-full">
-                      <Book className="h-4 w-4 mr-2" />
-                      Ver Conteudo
-                    </Button>
+                    <Link href={`/student/lesson/${selectedLesson.id}`}>
+                      <Button className="w-full">
+                        <Book className="h-4 w-4 mr-2" />
+                        Ver Conteudo
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
